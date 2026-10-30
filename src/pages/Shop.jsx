@@ -1,14 +1,12 @@
+import { useMemo } from "react";
+import { NavLink, useSearchParams } from "react-router-dom";
+import HeroImg from "../assets/images/kids.jpg";
 
-import { useState, useContext } from 'react';
-import { PageContext } from '../context/PageContext.jsx';
-
-import { NavLink, useNavigate } from 'react-router-dom';
-import HeroImg from '../assets/images/kids.jpg';
-
-import '../scss/pages/Shop.scss';
-import ProductCard from '../components/ProductCard';
-import { DropdownField } from '../components/InputField.jsx'
-import SearchBar from '../components/SearchBar.jsx';
+import "../scss/pages/Shop.scss";
+import { DropdownField } from "../components/InputField.jsx";
+import SearchBar from "../components/SearchBar.jsx";
+import ProductGrid from "../components/ProductGrid.jsx";
+import { products } from "../data/products";
 
 const options = {
   category: [
@@ -25,11 +23,11 @@ const options = {
   style: [
     { value: "all", label: "All" },
     { value: "hot", label: "Hot" },
-    { value: "s**y", label: "s**y" },
+    { value: "sexy", label: "Sexy" },
     { value: "punk", label: "Punk" },
     { value: "trending", label: "Trending" },
   ],
-  enviroment: [
+  environment: [
     { value: "all", label: "All" },
     { value: "everywhere", label: "Everywhere" },
     { value: "work", label: "Work" },
@@ -39,80 +37,114 @@ const options = {
 };
 
 function Shop() {
+  const [params, setParams] = useSearchParams();
 
-  const [values, setValues] = useState({
-    category: "all",
-    style: "all",
-    enviroment: "all",
-  });
+  const values = {
+    category: params.get("category") ?? "all",
+    style: params.get("style") ?? "all",
+    environment: params.get("environment") ?? "all",
+  };
+  const query = params.get("q") ?? "";
 
-  function handleValues(property, value) {
-    setValues((prev) => ({ ...prev, [property]: value }));
+  function updateParam(key, value) {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (!value || value === "all") next.delete(key);
+        else next.set(key, value);
+        return next;
+      },
+      { replace: true }
+    );
   }
 
+  const handleValues = (property, value) => updateParam(property, value);
+  const handleReset = () => setParams({}, { replace: true });
 
-  return <main className="Shop shop-page">
-    <section className="shop_hero hero">
-      <div className="container">
-        <div className="hero_img">
-          <img src={HeroImg} alt="hero image" />
-        </div>
-        <div className="hero_content">
-          {/* <span className="eyebrow">Welcome to SamLi Thrift Collections</span> */}
-          <h1 className="slogan">
-            <span className="special">Explore</span> our <span className="special">Store</span>
-          </h1>
-          <p>
-            Discover incredible pieces that match your style and fit your budget
-          </p>
-          <div className="cta">
-            <NavLink to="/shop">Shop now</NavLink>
-            <NavLink to="/contact">Contact Us</NavLink>
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return products
+      .filter(
+        (p) =>
+          (values.category === "all" || p.category === values.category) &&
+          (values.style === "all" || p.style === values.style) &&
+          (values.environment === "all" ||
+            p.environment === values.environment ||
+            p.environment === "everywhere") &&
+          (!q || p.name.toLowerCase().includes(q))
+      )
+      // available items first, sold-out last
+      .sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
+  }, [values.category, values.style, values.environment, query]);
+
+  return (
+    <main className="Shop shop-page">
+      <section className="shop_hero hero">
+        <div className="container">
+          <div className="hero_img">
+            <img src={HeroImg} alt="Thrift clothes on display" />
+          </div>
+          <div className="hero_content">
+            <h1 className="slogan">
+              <span className="special">Explore</span> our <span className="special">Store</span>
+            </h1>
+            <p>Discover incredible pieces that match your style and fit your budget</p>
+            <div className="cta">
+              <a href="#products">Browse the store</a>
+              <NavLink to="/contact">Contact Us</NavLink>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <aside className="filter-header">
-      <div className="container">
-        <h3>Search SamLi:</h3>
-        <SearchBar className="filtervarsion"/>
-        <h3>and Filter by:</h3>
-        <div className="filters">
-          <DropdownField
-            label="Category"
-            name="category"
-            value={values.category}
-            options={options.category}
-            onChange={handleValues}
-            classNames={["filter"]}
+      <aside className="filter-header" aria-label="Search and filter products">
+        <div className="container">
+          <form role="search" className="filter-form" onSubmit={(e) => e.preventDefault()}>
+            <h3>Find your next favourite piece</h3>
+
+            <SearchBar
+              className="filtervariation"
+              value={query}
+              onChange={(v) => updateParam("q", v)}
             />
-          <DropdownField
-            label="Style"
-            name="style"
-            value={values.style}
-            options={options.style}
-            onChange={handleValues}
-            classNames={["filter"]}
-            />
-          <DropdownField
-            label="Enviroment"
-            name="enviroment"
-            value={values.enviroment}
-            options={options.enviroment}
-            onChange={handleValues}
-            classNames={["filter"]}
-          />
+
+            <div className="filters">
+              <DropdownField label="Category" name="category" value={values.category}
+                options={options.category} onChange={handleValues} classNames={["filter"]} />
+              <DropdownField label="Style" name="style" value={values.style}
+                options={options.style} onChange={handleValues} classNames={["filter"]} />
+              <DropdownField label="Environment" name="environment" value={values.environment}
+                options={options.environment} onChange={handleValues} classNames={["filter"]} />
+              <button type="button" className="clear-btn" onClick={handleReset}>
+                Clear filters
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
-    </aside>
+      </aside>
 
-    <section className="products">
-      <div className="container">
-        {([1,2,3,4,5,6,7,8,9]).map((each,i)=><ProductCard key={i}/>)}
-      </div>
-    </section>
-  </main>
+      <section className="products" id="products">
+        <div className="container">
+          <p className="results-count" aria-live="polite">
+            {results.length} {results.length === 1 ? "piece" : "pieces"} found
+          </p>
+
+          {results.length ? (
+            <ProductGrid products={results} />
+          ) : (
+            <div className="empty">
+              <i className="fa fa-search" aria-hidden="true"></i>
+              <p>No pieces match those filters yet.</p>
+              <p>New stock arrives often, or ask us on WhatsApp.</p>
+              <button type="button" className="clear-btn" onClick={handleReset}>
+                Clear filters
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  );
 }
 
-export default Shop
+export default Shop;

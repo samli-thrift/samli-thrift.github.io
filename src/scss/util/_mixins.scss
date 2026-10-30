@@ -15,7 +15,7 @@
   gap: $g;
 }
 
-@mixin btn($c: var(--text), $bg:var(--acc), $hc: var(--acc), $hbg: var(--acc-100), $hbor: var(--acc)){
+@mixin btn($c: var(--text), $bg:var(--acc), $hc: var(--acc), $hbg: var(--acc-100), $hbor: var(--text)){
   cursor: pointer;
   background: $bg;
   color: $c;
@@ -287,3 +287,5 @@
     display: none;
   }
 }
+
+

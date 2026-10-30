@@ -1,0 +1,159 @@
+@use '../util/' as *;
+
+.About {
+  @include df(normal, normal, column);
+}
+
+.about_hero {
+  @include gradient-bg;
+  @include section-width;
+  padding: 100px var(--sp);
+
+  @media (max-width: $mini-tab) { padding: 60px var(--sp); }
+
+  .container {
+    @include df(normal, center, column, 16px);
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  span.eyebrow {
+    @include btn;
+    & { cursor: auto; background: var(--cream); }
+    &:hover { color: var(--text); border-color: var(--text); background: var(--cream); }
+  }
+
+  h1 { font-size: clamp(2.5rem, 6dvw, 3.8rem); margin: 0; }
+  p  { line-height: 1.6; font-size: 1.1rem; margin: 0; }
+}
+
+.about_story {
+  @include section-width;
+  padding: 80px var(--sp);
+
+  .container {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+    grid-template-columns: 1fr 1.3fr;
+
+    @media (max-width: $big-tab) { grid-template-columns: 1fr; }
+  }
+
+  .img {
+    border: 5px solid var(--acc);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 7px 7px 0 var(--acc-300);
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+  }
+
+  .text {
+    @include df(normal, flex-start, column, 14px);
+    h2 { @include h2; align-self: flex-start; }
+    p  { line-height: 1.7; margin: 0; }
+    .signature { font-family: 'bilbo-swash-caps'; font-size: 1.6rem; }
+  }
+}
+
+.about_stats {
+  @include section-width;
+  padding: 48px var(--sp);
+  background: var(--text);
+  color: var(--bg);
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 24px;
+    text-align: center;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  strong {
+    display: block;
+    font-family: 'cascadia-code';
+    font-size: clamp(2rem, 6dvw, 3rem);
+    color: var(--acc);
+  }
+  span { font-size: .9rem; opacity: .85; }
+}
+
+.about_process {
+  @include section-width;
+  padding: 100px var(--sp);
+  @media (max-width: $mini-tab) { padding: 60px var(--sp); }
+
+  .container { @include df(normal, normal, column, 24px); }
+  h2 { @include h2; }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    display: grid;
+    gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  li {
+    counter-increment: step;
+    position: relative;
+    border-radius: 16px;
+    @include card-shadow;
+    & { padding-top: 36px; }
+    @include df(flex-start, flex-start, column, 10px);
+
+    &::before {
+      content: counter(step);
+      position: absolute;
+      top: 10px;
+      right: 16px;
+      font: 700 1.4rem 'cascadia-code';
+      color: var(--acc);
+    }
+
+    h3 { margin: 0; font-size: 1.2rem; }
+    p  { margin: 0; line-height: 1.5; }
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid var(--acc);
+    background: var(--bg);
+  }
+}
+
+.about_cta {
+  @include section-width;
+  background: var(--acc);
+  color: var(--dark);
+  padding: 32px var(--sp);
+
+  .container { @include df(normal, flex-start, column, 14px); }
+
+  h2 {
+    @include h2;
+    &::after { display: none; }
+  }
+
+  .btns {
+    @include df(normal, normal, row wrap, 18px);
+    a {
+      @include btn(var(--dark), transparent, var(--dark), var(--light), var(--dark));
+    }
+  }
+}

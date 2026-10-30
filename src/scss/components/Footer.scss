@@ -1,44 +1,86 @@
-
 @use '../util/' as *;
-
 
 .Footer {
   background: var(--dark);
   color: var(--light);
   @include df(normal, normal, column);
+
   .container {
     padding: 52px var(--sp);
-    @include df(space-between, center, row wrap, 18px);
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    align-items: start;
+
+    @media (max-width: $big-tab) {
+      grid-template-columns: 1fr 1fr;
+      .brand { grid-column: 1 / -1; }
+    }
+
     @media (max-width: $mini-tab) {
-      @include df(center, center, column, 26px);
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+      gap: 28px;
     }
   }
+
   .logo {
     font-family: 'bilbo-swash-caps';
-    font-size: 1.7rem;
-    @media (max-width: $mini-tab) {
-      font-size: 2rem;
-    }
+    font-size: 2rem;
+    line-height: 1;
   }
+
+  .tagline {
+    margin: 8px 0 0;
+    font-size: .95rem;
+    opacity: .85;
+    max-width: 32ch;
+  }
+
+  .connect-title {
+    margin: 0 0 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: .8rem;
+    color: var(--acc);
+  }
+
   .links {
-    @include df(center, center, row wrap, 8px);
+    @include df(flex-start, center, row wrap, 8px);
+
+    @media (max-width: $mini-tab) {
+      justify-content: center;
+    }
+
     a {
-      @include btn;
-      & {
-        font-size: 1.2rem;
-      }
+      @include btn(var(--dark), var(--acc), var(--dark), var(--light), var(--acc));
+      & { font-size: 1.2rem; }
     }
   }
+
   .more-links {
-    @include df(normal, normal, column, 8px);
+    @include df(normal, flex-start, column, 8px);
+
+    @media (max-width: $mini-tab) {
+      align-items: center;
+    }
+
     a {
-      @include btn;
+      @include btn(var(--dark), var(--acc), var(--dark), var(--light), var(--acc));
     }
   }
+
+  a:focus-visible {
+    outline: 2px solid var(--acc);
+    outline-offset: 2px;
+  }
+
   .copyright {
     padding: 12px var(--sp);
-    border-top: 1px solid;
+    border-top: 1px solid var(--acc-300);
     font-size: .8rem;
-    @include df(center, center);
+    text-align: center;
   }
 }
