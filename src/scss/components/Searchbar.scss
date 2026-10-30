@@ -1,0 +1,48 @@
+
+@use '../util/' as *;
+
+
+.Searchbar {
+  transition: all .3s;
+  @include df(normal, normal, row);
+  border: 1px solid var(--acc-500);
+  border-radius: 22px;
+  input {
+    @include input;
+    & {
+      padding: 8px;
+      font: 400 1rem 'outfit';
+      border: none;
+    }
+  }
+  &.headerVersion {
+    @media (max-width: $mini-tab) {
+      input {
+        display: none;
+      }
+    }
+
+  }
+  &:focus-within {
+    background: var(--cream);
+  }
+  .search-btn {
+    @include btn;
+    @include input-unit;
+    & {
+      font-size: 1.5rem;
+      font-weight: normal;
+      color: inherit;
+      width: 40px;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+  }
+  @media (max-width: $mini-tab) {
+    border: none;
+    .search-btn {
+      padding: 0;
+    }
+  }
+}

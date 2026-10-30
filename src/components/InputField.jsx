@@ -1,0 +1,269 @@
+
+import { Fragment, useContext, useEffect, useState } from "react"
+import "../scss/components/InputField.scss";
+import { PageContext } from "../context/PageContext";
+
+export function InputField ({
+  inputType = "number",
+  id,
+  name,
+  label,
+  val,
+  value,
+  placeholder = "",
+  unit,
+
+  msgType,
+  msg,
+  onChange,
+}) {
+  const { theme } = useContext(PageContext);
+  const [valueState, setValueState] = useState(value ?? val ?? "");
+
+  useEffect(() => {
+    setValueState(value ?? val ?? "");
+  }, [value, val]);
+
+  function handleChange(e) {
+    const nextValue = e.target.value;
+    setValueState(nextValue);
+    if (!onChange) return;
+
+    if (onChange.length >= 2) {
+      onChange(name ?? id ?? e.target.name, nextValue);
+      return;
+    }
+
+    onChange(nextValue);
+  }
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  if (inputType === 'password') {
+    unit = <button onClick={(e) => {
+      e.preventDefault();
+      setShowPassword(!showPassword);
+    }}>
+      {showPassword
+        ? <i className="fa fa-eye"></i>
+        : 'show'}
+    </button>
+  }
+
+  return (
+    <div className="InputField">
+      <div className={`InputField__container ${theme}`}>
+        <input
+          type={inputType == 'password'
+            ? showPassword
+              ? 'text'
+              : inputType
+            : inputType
+          }
+          id={`${id}_input`}
+          name={name ?? id}
+          value={valueState}
+          onChange={handleChange}
+          placeholder={placeholder}
+        />
+        <label
+          htmlFor={`${id}_input`}>
+          { label
+            ? label
+            : id && id.replace('-', ' ')
+          }
+        </label>
+        
+        {unit && <span className="input_unit">{unit}</span>}
+      </div>
+
+      {msg && <div
+        className={`error-message ${id}Error ${msgType && msgType}`}>
+        {(msg)
+          ? msg
+          : <>Please input a valid number</>
+        }
+        
+      </div>}
+    </div>
+  )
+}
+
+export function RadioField({
+  label,
+  id,
+  classNames = [],
+  options,
+  name,
+  selectedValue,
+  onChange,
+}) {
+  // useEffect(() => {
+  //   selectedValue = selectedValue;
+  // },[selectedValue]);
+  // console.log(options, selectedValue, name, onChange);
+
+  return (
+    <fieldset id={id} className={`RadioField ${classNames.join(" ")}`}>
+      <legend>{
+        label
+          ? label
+          : id.replace('-',' ')
+      }</legend>
+
+      <div className="types">
+        {options.map((option, key) => (
+          <Radio
+            data={option}
+            key={key}
+            name={name}
+            selectedValue={selectedValue}
+            onChange={onChange}
+          />
+        ))}
+
+        <div className="error-msg">Please select an option</div>
+      </div>
+    </fieldset>
+  )
+}
+
+function Radio({ data, name, selectedValue, onChange }) {
+  const value = data?.value ?? "Option";
+
+  function handleChange() {
+    if (!onChange) return;
+    if (onChange.length === 2) {
+      onChange(name, value);
+    } else {
+      onChange(value);
+    }
+  }
+
+  return (
+    <label htmlFor={value}>
+      <input
+        type="radio"
+        name={name}
+        id={value}
+        value={value}
+        checked={selectedValue === value}
+        onChange={handleChange}
+      />
+      <span>{value.replace('-'," ")}</span>
+    </label>
+  );
+}
+
+export function ImageRadioField({
+  label, // String
+  options, // Array
+  name,
+  selectedValue, // String
+  onChange, // Function handleValues(name, value)
+  classNames,
+}) {
+
+  return <fieldset className={`image-radio-field ${classNames && classNames.join(' ')}`}>
+    <legend>{label}</legend>
+    <div className="options">
+      {options && options.map((option, i) =>
+      
+        <Fragment key={i}>
+          <input
+            type="radio"
+            name={name}
+            id={`${name}-${option.value}`}
+            value={option.value}
+            onChange={() => {
+              if (!onChange) return;
+              if (onChange.length === 2) {
+                onChange(name, option.value);
+              } else {
+                onChange(option.value);
+              }
+            }}
+            checked={selectedValue === option.value}
+          />
+          
+          <label htmlFor={`${name}-${option.value}`} key={i}>
+            {option.image && <img src={option.image} alt={option.image} />}
+            <span>{option.value.replace('-', ' ')}</span>
+          </label>
+        </Fragment>
+      )}
+    </div>
+  </fieldset>;
+}
+
+export function DropdownField({
+  label,
+  name,
+  value,
+  options,
+  classNames,
+  onChange,
+}) {
+  return <div className={`dropdown-field ${classNames && classNames.join(' ')}`}>
+    <div className="container">
+      <label htmlFor={name}>{label && label.replace('-', ' ')}</label>
+      <select
+        name={name}
+        id={name}
+        onChange={(e) => {
+          if (!onChange) return;
+          if (onChange.length === 2) {
+            onChange(name, e.target.value);
+          } else {
+            onChange(e.target.value);
+          }
+        }}
+      >
+        {options && options.map((option, i) => <option
+          key={i}
+          value={option.value} selected={value === option.value}
+        >
+          { typeof option.value == 'string'
+            ? option.label.replaceAll('-', ' ')
+            : option.value
+          }
+        </option>)}
+      </select>
+    </div>
+  </div>;
+}
+
+export function ImageCheckboxField({
+  label = 'Image Checkbox Field',
+  name = 'name',
+  info = 'Lorem ipsium donor sit amet',
+  classNames = [],
+  image,
+  selected,
+  
+  onChange,
+  includeInfo,//{groupname, value}
+}) {
+  const [isChecked, setIsChecked] = useState(selected ?? false);
+
+  function handleTicking() {
+    setIsChecked(!isChecked);
+    onChange(includeInfo.groupName, includeInfo.value);
+  }
+  
+  return <div className={`image-checkbox-field  ${classNames.join(' ')}`} id={`parent-of-${name}`}>
+    {image && <img src={image} alt={image} />}
+    <div className="info">
+      <label htmlFor={name}><h4>{label.replace('-', ' ')}</h4></label>
+      {info && <p>{info}</p>}
+    </div>
+
+    <input
+      type="checkbox"
+      name={name}
+      id={name}
+      checked={isChecked}
+      onChange={handleTicking}
+    />
+  </div>
+}

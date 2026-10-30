@@ -1,0 +1,330 @@
+
+
+@use '../util/' as *;
+
+.Home {
+  @include df(normal, normal, column);
+}
+
+.home_hero {
+  @include gradient-bg;
+  @include section-width;
+  padding: 100px var(--sp);
+  @media (max-width: $mini-tab) {
+    padding: 100px 0;
+  }
+  .container {
+    @include df(normal, center, row-reverse, 26px);
+    @media (max-width: $mini-tab) {
+      @include df(normal, center, column, 18px);
+    }
+  }
+  .hero_img {
+    flex: 1;
+    @include df(normal, normal, column);
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      max-height: 450px;
+      object-fit: cover;
+    }
+    @media (max-width: $mini-tab) {
+      overflow: hidden;
+      width: 100%;
+      padding: 0px var(--sp);
+      img {
+        width: 100%;
+        max-height: 300px;
+      }
+    }
+  }
+  .hero_content {
+    flex: 1;
+    @include df(normal, start, column, 16px);
+    @media (max-width: $mini-tab) {
+      padding: 0 var(--sp);
+      text-align: center;
+      @include df(center, center, column, 16px);
+    }
+    span.eyebrow {
+      @include btn;
+      & {
+        cursor:auto;
+        background: var(--cream);
+      }
+      &:hover {
+        color: var(--text);
+        border-color: var(--text);
+        background: var(--cream);
+      }
+    }
+    h1.slogan {
+      font-size: clamp(2.7rem, 5dvw, 4rem);
+    }
+    p {
+      line-height: 1.5;
+      font-size: clamp(1rem, 5dvw, 1.15rem);
+    }
+    .cta {
+      @include df(normal, center, row wrap, 16px);
+      a {
+        @include btn;
+      }
+    }
+  }
+}
+
+.shopby {
+  @include section-width;
+  & {
+    background: var(--cream);
+    padding: 100px var(--sp);
+  }
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  .categories {
+   @include scroll-grid;
+  }
+  h2 {
+    @include h2;
+  }
+  .category {
+    @include btn;
+    & {
+      flex: 1;
+      min-width: 250px;
+      max-height: 400px;
+      padding: 0;
+      overflow: hidden;
+      @include df(normal, normal, column, 8px);
+    }
+    .img {
+      overflow: hidden;
+      @include df(normal, normal, row);
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .text {
+      @include df(center, center, column, 8px);
+      a {
+        @include btn();
+        &, &:hover {
+          width: 100%;
+          border: none;
+          margin-bottom: 8px;
+          color: var(--text);
+          background: transparent;
+          @include df(space-between, center, row, 8px);
+        }
+      }
+    }
+  }
+}
+
+.featured {
+  padding: 100px var(--sp);
+  @include section-width;
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  h2 {
+    @include h2;
+  }
+  .products-grid {
+    @include scroll-grid;
+  }
+}
+
+.whychoose {
+  @include section-width;
+  padding: 100px var(--sp);
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  h2 {
+    @include h2;
+  }
+  &-content {
+    @include df(space-between, center, row wrap, 26px);
+  }
+  ul {
+    padding: 0;
+    list-style: none;
+    @include df(center, center, row wrap, 26px);
+    li {
+      font-size: 1.2rem;
+      border: 1px solid;
+      min-width: 200px;
+      min-height: 200px;
+      border-radius: 16px;
+      background: var(--acc-200);
+      font-weight: 600;
+      padding: 16px;
+      text-align: center;
+      @include df(center, center, column, 12px);
+      @include card-shadow;
+
+      @media (max-width: $mini-tab) {
+        width: 100%;
+      }
+      @media (min-width:  $mini-tab) {
+        min-width: 300px;
+      }
+    }
+  }
+}
+
+.meetowner {
+  @include section-width;
+  padding: 32px var(--sp);
+  background-color: var(--text);
+  color: var(--bg);
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  &-content {
+    padding: 0;
+    @include df(center, center, column, 16px);
+    @media (min-width: $mini-tab) {
+      @include df(normal, center, row, 26px);
+    }
+  }
+  .img {
+    border: 5px solid var(--acc);
+    min-width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    @include df(center, center);
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .text {
+    padding: 18px;
+    text-align: center;
+    @include df(center, center, column, 8px);
+    h2 {
+      @include eyebrow;
+      color: var(--bg);
+    }
+    h3 {
+      @include h2;
+      &.light-mode {
+        .special {
+          -webkit-text-stroke-color: var(--acc);
+          -webkit-text-fill-color: var(--text);
+        }
+      }
+      &.dark-mode {
+        .special {
+          -webkit-text-stroke-color: var(--bg);
+          -webkit-text-fill-color: var(--acc);
+        }
+      }
+    }
+    p {
+      line-height: 1.6
+    }
+    .seemore-btn {
+      @include btn;
+    }
+    @media (min-width: $mini-tab) {
+    text-align: left;
+      @include df(normal, start, column, 8px);
+      h3 {
+        justify-content: left;
+        align-items: start;
+        .special {
+          padding: 0;
+        }
+      }
+    }
+  }
+}
+
+.reviews {
+  padding: 100px var(--sp);
+  @include section-width;
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  h2 {
+    @include h2;
+  }
+  span.small-talk {
+    text-align: center;
+  }
+  .reviews-grid {
+    @include scroll-grid;
+  }
+  .review-card {
+    @include card-shadow;
+    @include df(normal, start, column, 8px);
+    & {
+      min-width: 250px;
+      @media (max-width: $mini-tab) {
+        position: relative;
+        min-width: 100%;
+      }
+    }
+    .name {
+     align-self: right;
+    }
+    i {
+      position: absolute;
+      font-size: 48px;
+      color: var(--acc-300);
+      top: 0;
+      right: 0;
+    }
+  }
+}
+
+.faqs {
+  @include section-width;
+  padding: 100px var(--sp);
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  h2 {
+    @include h2;
+  }
+  &-content {
+    @include df(normal, normal, column, 8px);
+  }
+}
+
+section.cta {
+  @include section-width;
+  & {
+    background: var(--acc);
+    padding: 18px var(--sp);
+  }
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+  h2 {
+    @include h2;
+    &::after {
+      // Cancelling out dash
+      display: none;
+    }
+  }
+  .container {
+    @include df(normal, start, column, 12px);
+  }
+  .btns {
+    @include df(normal, normal, row wrap, 18px);
+    a {
+      @include btn;
+    }
+  }
+}

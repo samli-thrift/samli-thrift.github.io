@@ -1,0 +1,59 @@
+
+@use '../util/' as *;
+@use './Home.scss' as h;
+
+.shop_hero {
+  @extend .home_hero;
+  .container {
+    @media (min-width:  $mini-tab) {
+      flex-flow: row;
+    }
+  }
+}
+
+aside.filter-header {
+  @include section-width;
+  border-top: 1px solid var(--acc);
+  border-bottom: 1px solid var(--acc);
+  background: var(--light);
+  .container {
+    @include df(normal, normal, column, 12px);
+  }
+  h3 {
+    font-family: 'bilbo-swash-caps';
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .Searchbar {
+    border: 1px solid;
+    padding: 4px 8px;
+    input {
+      font-family: 'jetbrains-mono';
+      &::placeholder {
+        color: var(--dark);
+      }
+    }
+    // .search-button {}
+  }
+  .filters {
+    @include df(normal, center, row wrap, 18px);
+    .filter {
+      flex: 1;
+      label {
+        background: var(--cream) !important;
+      }
+      select,input {
+        border-radius: 22px !important;
+      }
+    }
+  }
+}
+
+.products {
+  @include section-width;
+  .container  {
+    @include dg(auto-fit, 250px, 1fr, 8px);
+  }
+}
+

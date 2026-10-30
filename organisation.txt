@@ -1,0 +1,44 @@
+
+
+###### Folder structure
+
+samli-thrift/
+├── public/
+│   └── images/
+│
+├── src/
+│   ├── assets/
+│   │
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ProductCard.jsx
+│   │   ├── ProductGrid.jsx
+│   │   ├── SearchBar.jsx
+│   │   └── CategoryFilter.jsx
+│   │
+│   ├── pages/
+│   │   ├── Home.jsx
+│   │   ├── Shop.jsx
+│   │   ├── ProductDetails.jsx
+│   │   └── About.jsx
+│   │
+│   ├── context/
+│   │   └── CartContext.jsx
+│   │
+│   ├── data/
+│   │   └── products.js
+│   │
+│   ├── services/
+│   │   └── products.js
+│   │
+│   ├── styles/
+│   │   ├── global.scss
+│   │   ├── components.scss
+│   │   └── pages.scss
+│   │
+│   ├── App.jsx
+│   └── main.jsx
+│
+├── index.html
+└── package.json
