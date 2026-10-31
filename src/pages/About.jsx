@@ -6,8 +6,8 @@ import "../scss/pages/About.scss";
 const stats = [
   { value: "4+", label: "Years trading" },
   { value: "250+", label: "Online sales" },
-  { value: "36", label: "States delivered to" },
-  { value: "[X]", label: "Returning customers" },
+  { value: "12", label: "States delivered to" },
+  { value: "Many", label: "Returning customers" },
 ];
 
 const steps = [
@@ -29,7 +29,7 @@ function About() {
             </h1>
             <p>
               SamLi Thrift Collections is a Nigerian thrift store built on honest
-              grading and fair prices. [One sentence on what you sell and who it's for.]
+              grading and fair prices.<br/>Are you a student managing your funds, a worker upgrading your wardrobe or a retailer looking for stick to resell? Don't worry - we got you!
             </p>
           </div>
         </div>
@@ -42,9 +42,15 @@ function About() {
           </div>
           <div className="text">
             <h2>Our <span className="special">Story</span></h2>
-            <p>[How and why the store started.]</p>
-            <p>[What you look for when picking stock, and what you refuse to sell.]</p>
-            <p>[What a returning customer would say about you.]</p>
+            <p>
+              I started this business to provide quality okirika at affordable prices. I personally inspect every bale and tell customers the true condition. What you see is what you get.
+            </p>
+            <p>
+              Here at Samli, we believe that everyone deserves to look good, feel good and still have some change in their pocket. Are you a student managing your funds, a worker upgrading your wardrobe or a retailer looking for stick to resell? Don't worry - we got you!
+            </p>
+            <p>
+              Today, I supply quality thrift clothing to resellers and individuals across Nigeria. My goal is simple: sell good clothes, earn trust, and build long-term relationships.
+            </p>
             <p className="signature">- Ogun Lilian, Owner</p>
           </div>
         </div>

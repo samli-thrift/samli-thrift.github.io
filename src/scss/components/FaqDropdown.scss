@@ -10,6 +10,9 @@
   &:hover,
   &[open] {
     @include card-shadow;
+    @media (min-width: $tab) {
+      padding: 0;
+    }
   }
 
   summary {
@@ -25,6 +28,10 @@
     &:focus-visible {
       outline: 2px solid var(--acc);
       outline-offset: -2px;
+      @media (max-width: $mini-tab) {
+        outline: transparent;
+        border-bottom: 2px dashed var(--acc);
+      }
     }
 
     i {
@@ -42,7 +49,7 @@
     border-top: 1px solid var(--green-300);
     background: var(--green-100);
     line-height: 1.6;
-    animation: faq-reveal .25s ease;
+    animation: all .3s ease;
 
     p { margin: 0; }
   }

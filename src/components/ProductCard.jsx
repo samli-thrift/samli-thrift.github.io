@@ -22,22 +22,23 @@ function ProductCard({ product }) {
   const { carts, addToCart } = useContext(CartContext);
   const inCart = carts.some((item) => item.id === id);
 
-  const handleAddToCart = () => addToCart(product);
+  const handleAddToCart = () =>
+  addToCart({ id, name, price, image, status, size, condition });
 
   return (
     <article className={`product-card ${soldOut ? "is-sold-out" : ""}`}>
-      <a href={`/product-details?id=${id}`} className="product-card-img">
+      <Link to={`/product-details?id=${id}`} className="product-card-img">
         <img src={image} alt={name} loading="lazy" />
         {soldOut ? (
           <span className="status sold">Sold out</span>
         ) : (
           status && <span className="status">{status}</span>
         )}
-      </a>
+      </Link>
 
       <div className="product-card-content">
         <h4 className="name">
-          <a href={`/product-details?id=${id}`}>{name}</a>
+          <Link to={`/product-detLinkils?id=${id}`}>{name}</Link>
         </h4>
 
         <ul className="meta">

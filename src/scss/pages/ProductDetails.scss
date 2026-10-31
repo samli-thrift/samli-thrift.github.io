@@ -1,0 +1,271 @@
+
+@use '../util/' as *;
+
+.ProductDetails {
+  padding-top: 100px;
+  @include df(normal, normal, column);
+
+  .btn_link {
+    @include btn;
+    & {
+      text-decoration: none;
+    }
+
+    &.ghost {
+      @include btn(var(--text), transparent, var(--text), var(--acc-100), var(--text));
+    }
+
+    &.in-cart {
+      @include btn(var(--text), var(--cream));
+    }
+
+    &:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* ---------- Breadcrumb ---------- */
+.pd_crumbs {
+  @include section-width;
+  padding: 20px var(--sp) 0;
+
+  .container {
+    @include df(normal, center, row wrap, 8px);
+    font-size: .85rem;
+    color: var(--medium);
+  }
+
+  a {
+    color: var(--medium);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  strong {
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ---------- Main ---------- */
+.pd_main {
+  @include section-width;
+  padding: 30px var(--sp) 80px;
+
+  .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+
+    @media (max-width: $big-tab) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 26px;
+    }
+  }
+}
+
+.pd_gallery {
+  min-width: 0;
+  @include df(normal, normal, column, 14px);
+}
+
+.pd_photo {
+  position: relative;
+  border: 1px solid var(--acc);
+  // box-shadow: 7px 7px 0 var(--acc-300);
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--cream);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 4px 12px;
+    border: 1px solid var(--text);
+    border-radius: 22px;
+    background: var(--cream);
+    color: var(--text);
+    font: 700 .72rem 'jetbrains-mono';
+    letter-spacing: .06em;
+    text-transform: uppercase;
+
+    &.sold {
+      background: var(--error);
+      border-color: var(--error);
+      color: #fff;
+    }
+  }
+}
+
+.pd_thumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  @include scroll-grid;
+
+  li {
+    flex: 0 0 76px;
+  }
+
+  button {
+    width: 76px;
+    height: 76px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    background: none;
+    transition: all .3s;
+
+    &.on,
+    &:hover {
+      border-color: var(--acc);
+    }
+
+    &:focus-visible {
+      @include focus-shadow;
+      outline: none;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+}
+
+/* ---------- Info ---------- */
+.pd_info {
+  min-width: 0;
+  @include df(normal, flex-start, column, 16px);
+
+  .eyebrow {
+    @include eyebrow;
+    color: var(--dark-acc);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4dvw, 2.6rem);
+    overflow-wrap: anywhere;
+  }
+
+  .price {
+    margin: 0;
+    font: 700 1.8rem 'cascadia-code';
+  }
+
+  .grade_note,
+  .desc {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--medium);
+  }
+
+  .desc {
+    color: var(--text);
+  }
+}
+
+.pd_meta {
+  list-style: none;
+  margin: 0;
+  padding: 14px 0;
+  width: 100%;
+  border-top: 1px solid var(--acc-300);
+  border-bottom: 1px solid var(--acc-300);
+  @include df(normal, normal, row wrap, 28px);
+
+  li {
+    @include df(normal, flex-start, column, 4px);
+  }
+
+  span {
+    color: var(--medium);
+    font-size: .8rem;
+  }
+
+  strong {
+    font: 700 1rem 'jetbrains-mono';
+  }
+}
+
+.pd_actions {
+  width: 100%;
+  @include df(normal, center, row wrap, 14px);
+}
+
+.pd_assure {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 18px 0 0;
+  width: 100%;
+  border-top: 1px solid var(--acc-300);
+  @include df(normal, normal, column, 12px);
+
+  li {
+    @include df(normal, center, row, 12px);
+    font-size: .9rem;
+  }
+
+  i {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--acc);
+    border-radius: 50%;
+    background: var(--cream);
+    flex-shrink: 0;
+    @include df(center, center);
+  }
+}
+
+/* ---------- Related ---------- */
+.pd_related {
+  @include section-width;
+  padding: 60px var(--sp) 90px;
+  border-top: 1px solid var(--acc-300);
+
+  .container {
+    @include df(normal, normal, column, 28px);
+  }
+
+  h2 {
+    @include h2;
+  }
+
+  .grid {
+    @include dg(auto-fill, 220px, 1fr, 22px);
+  }
+}
+
+/* ---------- Not found ---------- */
+.pd_missing {
+  grid-column: 1 / -1;
+  min-height: 360px;
+  @include empty;
+
+  h1 {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--medium);
+  }
+}

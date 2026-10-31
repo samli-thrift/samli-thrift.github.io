@@ -82,16 +82,16 @@ const feauturedProducts = [1, 2, 2, 3, 3];
 
 const reviews = [
   {
-    name: 'ifesinachi',
-    review: 'Use genuine customer reviews or screenshots that your mum has permission to share.'
+    name: 'Blessing C.',
+    review: <>Really nice clothes. I really appreciate your honesty.</>
   },
   {
-    name: 'ifesinachi',
-    review: 'Use genuine customer reviews or screenshots that your mum has permission to share.'
+    name: 'Juliet M.',
+    review: 'Thank you for the quick delivery and quality stock.'
   },
   {
-    name: 'ifesinachi',
-    review: 'Use genuine customer reviews or screenshots that your mum has permission to share.'
+    name: 'Olatunde O.',
+    review: 'I got something even better than I ordered.'
   },
 ];
 
@@ -136,18 +136,18 @@ const faqs = [
   },
   {
     question: "How long does delivery take, and what does it cost?",
-    answer: <>[Typical delivery time, and how the waybill fee is worked out.]</>,
+    answer: <>Less than 4 days for all deliveries no matter the state or traffic. It also depends on how the waybill fee is worked out.</>,
   },
   {
     question: "Can I return or exchange an item?",
-    answer: <>[Your return or exchange policy, e.g. wrong size, item not as described.]</>,
+    answer: <>No returns once waybilled. Detailed descriptions  and real size quality images of each piece are available in the product detail.</>,
   },
   {
     question: "How is the condition of each item described?",
     answer: (
       <>
         Every item is graded honestly, and any flaws are mentioned before you
-        pay. [Add: you can ask for extra photos or measurements on WhatsApp.]
+        pay. You can ask for extra photos or measurements on WhatsApp.
       </>
     ),
   },
@@ -237,7 +237,7 @@ function Home() {
           <div className="text">
             <h2>Meet the Owner</h2>
             <h3 className={theme?theme:""}><span className="special">Ogun Lilian</span></h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque adipisci iusto voluptates...Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque adipisci iusto voluptates</p>
+            <p>Hi! I'm Lilian! Here at Samli, we believe that everyone deserves to look good, feel good and still have some change in their pocket. Are you...</p>
             <button className="seemore-btn">Read More</button>
           </div>
         </div>
@@ -247,7 +247,7 @@ function Home() {
     <section className="reviews">
       <div className="container">
         <h2>Genuine <span className="special">Customer Feedback</span></h2>
-        <span className="small-talk">Real sales. Real Customers. Real Reviews</span>
+        <h4 className="small-talk">Real sales. Real Customers. Real Reviews</h4>
         <div className="reviews-grid">
           {reviews && reviews.map((each, i) => <div className="review-card" key={i}>
             <i className="icon-quote"></i>
@@ -255,7 +255,7 @@ function Home() {
             <h4 className="name"><b> - {each.name}</b></h4>
           </div>)}
         </div>
-        <span className="small-talk">Over <b>500+</b> successful <b>online</b> sales with happy returning customers.</span>
+        <span className="small-talk">Over <b>250+</b> successful <b>online</b> sales with happy returning customers.</span>
       </div>
     </section>
 

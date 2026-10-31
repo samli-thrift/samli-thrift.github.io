@@ -11,11 +11,16 @@
 .about_story {
   @include section-width;
   padding: 80px var(--sp);
+  background: var(--cream);
+  border-top: 1px solid var(--acc);
 
   .container {
     @include df(center, center, column, 22px);
     @media (min-width: $mini-tab) {
-      @include df(start, center, row wrap, 36px);
+      @include df(space-between, center, row-reverse wrap, 36px);
+    }
+    @media (min-width: $tab) {
+      flex-flow: row-reverse;
     }
   }
 
@@ -35,7 +40,9 @@
   .text {
     text-align: center;
     @include df(center, center, column, 14px);
-    h2 { @include h2; }
+    h2 {
+      font-size: clamp(2rem,5dvw, 3.5rem);
+    }
     p  { line-height: 1.7; margin: 0; }
     .signature { font-family: 'bilbo-swash-caps'; font-size: 1.6rem; }
     @media (min-width: $mini-tab) {

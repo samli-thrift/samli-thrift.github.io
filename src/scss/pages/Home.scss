@@ -198,7 +198,7 @@
   h2 {
     @include h2;
   }
-  span.small-talk {
+  .small-talk {
     text-align: center;
   }
   .reviews-grid {
@@ -206,16 +206,17 @@
   }
   .review-card {
     @include card-shadow;
-    @include df(normal, start, column, 8px);
+    @include df(normal, normal, column, 8px);
     & {
       min-width: 250px;
+      border-radius: 22px;
+      position: relative;
       @media (max-width: $mini-tab) {
-        position: relative;
         min-width: 100%;
       }
     }
     .name {
-     align-self: right;
+     align-self: flex-end;
     }
     i {
       position: absolute;

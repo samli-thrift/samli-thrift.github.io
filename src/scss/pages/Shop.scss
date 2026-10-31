@@ -3,7 +3,7 @@
 
 .shop_hero {
   @include page-hero;
-  & { padding-block: 60px; }
+  // & { padding-block: 60px; }
   .container {
     @media (min-width: $mini-tab) { flex-flow: row; }
   }
