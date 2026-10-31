@@ -5,27 +5,7 @@
 }
 
 .about_hero {
-  @include gradient-bg;
-  @include section-width;
-  padding: 100px var(--sp);
-
-  @media (max-width: $mini-tab) { padding: 60px var(--sp); }
-
-  .container {
-    @include df(normal, center, column, 16px);
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  span.eyebrow {
-    @include btn;
-    & { cursor: auto; background: var(--cream); }
-    &:hover { color: var(--text); border-color: var(--text); background: var(--cream); }
-  }
-
-  h1 { font-size: clamp(2.5rem, 6dvw, 3.8rem); margin: 0; }
-  p  { line-height: 1.6; font-size: 1.1rem; margin: 0; }
+  @include page-hero;
 }
 
 .about_story {
@@ -33,40 +13,50 @@
   padding: 80px var(--sp);
 
   .container {
-    display: grid;
-    gap: 40px;
-    align-items: center;
-    grid-template-columns: 1fr 1.3fr;
-
-    @media (max-width: $big-tab) { grid-template-columns: 1fr; }
+    @include df(center, center, column, 22px);
+    @media (min-width: $mini-tab) {
+      @include df(start, center, row wrap, 36px);
+    }
   }
 
   .img {
     border: 5px solid var(--acc);
-    border-radius: 22px;
+    min-width: 300px;
+    height: 300px;
+    border-radius: 50%;
     overflow: hidden;
-    box-shadow: 7px 7px 0 var(--acc-300);
+    @include df(center, center);
     img {
-      display: block;
       width: 100%;
-      aspect-ratio: 4 / 5;
+      height: 100%;
       object-fit: cover;
     }
   }
-
   .text {
-    @include df(normal, flex-start, column, 14px);
-    h2 { @include h2; align-self: flex-start; }
+    text-align: center;
+    @include df(center, center, column, 14px);
+    h2 { @include h2; }
     p  { line-height: 1.7; margin: 0; }
     .signature { font-family: 'bilbo-swash-caps'; font-size: 1.6rem; }
+    @media (min-width: $mini-tab) {
+      h2 {
+        justify-content: left;
+        align-items: start;
+        .special {
+          padding: 0;
+        }
+      }
+      text-align: left;
+      @include df(normal, flex-start, column, 14px);
+    }
   }
 }
 
 .about_stats {
   @include section-width;
   padding: 48px var(--sp);
-  background: var(--text);
-  color: var(--bg);
+  background: var(--dark);
+  color: var(--light);
 
   ul {
     list-style: none;

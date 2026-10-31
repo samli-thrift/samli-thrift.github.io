@@ -1,3 +1,5 @@
+
+
 @use '../util/' as *;
 
 .product-card {
@@ -81,6 +83,7 @@
     font-weight: bold;
   }
 
+  // Works for both the <button> (Add to Cart) and the <a> (In cart · View cart)
   .add-btn {
     @include btn;
     & {
@@ -89,7 +92,24 @@
       padding: 8px 16px;
     }
     &:disabled { opacity: .5; cursor: not-allowed; }
+    &:focus-visible { @include focus-shadow; }
+
+    // Already in the cart: calmer look so it reads as "done", still clickable
+    &.in-cart {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--green, #2f6f4e);
+
+      i { color: var(--green, #2f6f4e); }
+
+      &:hover {
+        background: var(--acc-100);
+        border-color: var(--text);
+        color: var(--text);
+      }
+    }
   }
 
   &.is-sold-out img { filter: grayscale(1); opacity: .7; }
 }
+

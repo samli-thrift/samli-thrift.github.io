@@ -1,3 +1,8 @@
+
+
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 import "../scss/components/ProductCard.scss";
 
 const formatPrice = (n) => `₦${n.toLocaleString("en-NG")}`;
@@ -14,10 +19,10 @@ function ProductCard({ product }) {
     soldOut = false,
   } = product;
 
-  const handleAddToCart = () => {
-    // TODO: hook into your cart (context / redux)
-    console.log("Add to cart:", id);
-  };
+  const { carts, addToCart } = useContext(CartContext);
+  const inCart = carts.some((item) => item.id === id);
+
+  const handleAddToCart = () => addToCart(product);
 
   return (
     <article className={`product-card ${soldOut ? "is-sold-out" : ""}`}>
@@ -46,18 +51,27 @@ function ProductCard({ product }) {
           <p className="price">{formatPrice(price)}</p>
         </div>
 
-        <button
-          type="button"
-          className="add-btn"
-          disabled={soldOut}
-          onClick={handleAddToCart}
-        >
-          <i className="fa fa-shopping-cart" aria-hidden="true"></i>
-          {soldOut ? "Unavailable" : "Add to Cart"}
-        </button>
+        {inCart && !soldOut ? (
+          <Link to="/cart" className="add-btn in-cart">
+            <i className="fa fa-check" aria-hidden="true"></i>
+            In cart · View cart
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="add-btn"
+            disabled={soldOut}
+            onClick={handleAddToCart}
+          >
+            <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+            {soldOut ? "Unavailable" : "Add to Cart"}
+          </button>
+        )}
       </div>
     </article>
   );
 }
 
 export default ProductCard;
+
+

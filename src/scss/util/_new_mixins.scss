@@ -46,17 +46,19 @@
       @include df(center, center, column, 16px);
     }
     span.eyebrow {
-      @include btn;
-      & {
-        cursor:auto;
-        background: var(--cream);
-      }
-      &:hover {
-        color: var(--text);
-        border-color: var(--text);
-        background: var(--cream);
-      }
-    }
+  @include btn;
+  & {
+    cursor: auto;
+    background: var(--cream);
+    color: var(--text);
+    border-color: var(--text);
+  }
+  &:hover {
+    color: var(--text);
+    border-color: var(--text);
+    background: var(--cream);
+  }
+}
     h1.slogan {
       font-size: clamp(2.7rem, 5dvw, 4rem);
     }

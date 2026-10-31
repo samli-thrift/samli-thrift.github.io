@@ -47,12 +47,12 @@
     .text {
       @include df(center, center, column, 8px);
       a {
-        @include btn();
+        @include btn;
         &, &:hover {
           width: 100%;
           border: none;
           margin-bottom: 8px;
-          color: var(--text);
+          color: var(--dark);
           background: transparent;
           @include df(space-between, center, row, 8px);
         }

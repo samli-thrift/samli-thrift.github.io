@@ -67,6 +67,8 @@ $cream-200: rgba($cream, .1);
   // Permanent Single Colors
   --dark: #2c1f02;
   --light: #ffffc0;
+  
+  --btn-hover: var(--dark-acc); 
 
   // Accent color
   --acc: rgb(245, 197, 24);
@@ -99,5 +101,7 @@ html.dark-mode {
   --error-rgb: 255, 138, 128;
   --correct: #e5b94c;
   --active: #80bfff;
+  
+  --btn-hover: var(--acc);
 }
 

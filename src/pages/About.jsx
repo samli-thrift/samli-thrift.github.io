@@ -22,7 +22,7 @@ function About() {
     <main className="About">
       <section className="about_hero">
         <div className="container">
-          <div className="about_hero-text">
+          <div className="hero_content">
             <span className="eyebrow">About SamLi Thrift</span>
             <h1>
               Thrift you can <span className="special">trust</span>
