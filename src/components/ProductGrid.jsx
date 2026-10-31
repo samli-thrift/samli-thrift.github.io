@@ -1,11 +1,11 @@
+import ProductCard from "./ProductCard";
 
-
-import React from 'react'
-
-function ProductGrid() {
+export default function ProductGrid({ products }) {
   return (
-    <div>ProductGrid</div>
-  )
+    <div className="product-grid">
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
+      ))}
+    </div>
+  );
 }
-
-export default ProductGrid

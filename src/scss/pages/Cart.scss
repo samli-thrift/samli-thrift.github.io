@@ -1,0 +1,268 @@
+
+
+
+@use '../util/' as *;
+
+.Cart {
+  @include df(normal, normal, column);
+}
+
+.cart_head {
+  @include section-width;
+  @include gradient-bg;
+  padding: 70px var(--sp) 40px;
+
+  .container {
+    @include df(normal, normal, column, 8px);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 5dvw, 3.2rem);
+  }
+
+  p {
+    margin: 0;
+    color: var(--medium);
+  }
+}
+
+.cart_body {
+  @include section-width;
+  padding: 40px var(--sp) 100px;
+  @media (max-width: $mini-tab) {
+    padding: 30px var(--sp) 60px;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 28px;
+    align-items: start;
+    @media (max-width: $big-tab) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+// Shared link/button look for CTAs on this page
+.cart_body .btn_link {
+  @include btn;
+}
+
+/* ---------- Item list ---------- */
+.cart_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  @include card-shadow;
+  & {
+    padding: 0 22px;
+  }
+}
+
+.cart_item {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--acc-300);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--acc-300);
+  }
+
+  .info {
+    @include df(normal, flex-start, column, 6px);
+    min-width: 0;
+
+    h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      padding: 2px 10px;
+      border: 1px solid var(--text);
+      border-radius: 22px;
+      background: var(--cream);
+      font: 700 .7rem 'jetbrains-mono';
+    }
+
+    .unit {
+      font-family: 'cascadia-code';
+      color: var(--medium);
+      font-size: .9rem;
+    }
+  }
+
+  .controls {
+    @include df(normal, flex-end, column, 10px);
+
+    .line {
+      font-family: 'cascadia-code';
+      font-size: 1.1rem;
+    }
+  }
+
+  .qty {
+    @include df(center, center, row);
+    border: 1px solid var(--text);
+
+    button {
+      width: 34px;
+      height: 34px;
+      font-size: 1.1rem;
+      background: transparent;
+      color: var(--text);
+      border: none;
+      cursor: pointer;
+      transition: all .3s;
+
+      &:hover:not(:disabled) {
+        background: var(--acc-200);
+      }
+      &:focus-visible {
+        @include focus-shadow;
+        outline: none;
+      }
+      &:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+      }
+    }
+
+    span {
+      min-width: 38px;
+      text-align: center;
+      font: 700 .95rem 'jetbrains-mono';
+    }
+  }
+
+  .remove {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--error);
+    font: 700 .75rem 'jetbrains-mono';
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: $mini-tab) {
+    grid-template-columns: 72px minmax(0, 1fr);
+
+    img {
+      width: 72px;
+      height: 72px;
+    }
+
+    .controls {
+      grid-column: 1 / -1;
+      @include df(space-between, center, row, 12px);
+      flex-wrap: wrap;
+    }
+  }
+}
+
+/* ---------- Summary ---------- */
+.cart_summary {
+  @include card-shadow;
+  @include df(normal, normal, column, 16px);
+  position: sticky;
+  top: 90px;
+
+  @media (max-width: $big-tab) {
+    position: static;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  dl {
+    margin: 0;
+    @include df(normal, normal, column, 10px);
+
+    div {
+      @include df(space-between, baseline, row, 12px);
+    }
+
+    dt {
+      color: var(--medium);
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    div:nth-child(2) dd {
+      font-family: 'cascadia-code';
+      color: var(--acc);
+      font-size: 1.2rem;
+    }
+  }
+
+  .checkout {
+    width: 100%;
+  }
+
+  .how {
+    margin: 0;
+    font-size: .9rem;
+    line-height: 1.6;
+    color: var(--medium);
+  }
+
+  .secondary {
+    @include df(space-between, center, row wrap, 12px);
+    padding-top: 12px;
+    border-top: 1px solid var(--acc-300);
+
+    a,
+    button {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--text);
+      font: 700 .75rem 'jetbrains-mono';
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    button {
+      color: var(--medium);
+    }
+  }
+}
+
+/* ---------- Empty state ---------- */
+.cart_empty {
+  grid-column: 1 / -1;
+  @include empty;
+  min-height: 340px;
+
+  h2 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    color: var(--medium);
+  }
+}

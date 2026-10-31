@@ -16,11 +16,11 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'outfit',Monospace;
+  font-family: 'outfit','redaction', Monospace;
   font-size: 1rem;
 
   h1,h2,h3,h4 {
-    font-family: "times-new-roman";
+    font-family: "redaction";
   }
   main {
     min-height: 70dvh;
@@ -32,7 +32,7 @@ body {
   background-color: var(--acc);
   background-clip: text;
   padding: 0 10px;
-  -webkit-text-stroke: 2px var(--text);
+  -webkit-text-stroke: 1px var(--text);
   color: transparent;
   padding: 0;
 }

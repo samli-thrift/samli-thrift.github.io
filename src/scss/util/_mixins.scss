@@ -15,7 +15,7 @@
   gap: $g;
 }
 
-@mixin btn($c: var(--text), $bg:var(--acc), $hc: var(--acc), $hbg: var(--acc-100), $hbor: var(--acc)){
+@mixin btn($c: var(--dark), $bg: var(--acc), $hc: var(--btn-hover), $hbg: var(--acc-100), $hbor: var(--text)) {
   cursor: pointer;
   background: $bg;
   color: $c;
@@ -98,7 +98,7 @@
     bottom: 0;
     width: 50px;
     height: 4px;
-    border: 2px solid var(--text);
+    border: 2px solid var(--dark);
     border-radius: 10px;
     background: $color;
     transform: translateY(10px);
@@ -111,7 +111,7 @@
       left: 0;
       height: 100%;
       width: 5px;
-      border: 2px solid var(--text);
+      border: 2px solid var(--dark);
     }
   } @else if ($side == right) {
     margin: 0 20px 0 0;
@@ -121,7 +121,7 @@
       right: 0;
       height: 100%;
       width: 5px;
-      border: 2px solid var(--text);
+      border: 2px solid var(--dark);
     }
   }
 }
@@ -287,3 +287,5 @@
     display: none;
   }
 }
+
+

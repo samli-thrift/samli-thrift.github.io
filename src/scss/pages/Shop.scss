@@ -1,13 +1,11 @@
 
 @use '../util/' as *;
-@use './Home.scss' as h;
 
 .shop_hero {
-  @extend .home_hero;
+  @include page-hero;
+  & { padding-block: 60px; }
   .container {
-    @media (min-width:  $mini-tab) {
-      flex-flow: row;
-    }
+    @media (min-width: $mini-tab) { flex-flow: row; }
   }
 }
 
@@ -15,45 +13,94 @@ aside.filter-header {
   @include section-width;
   border-top: 1px solid var(--acc);
   border-bottom: 1px solid var(--acc);
-  background: var(--light);
-  .container {
-    @include df(normal, normal, column, 12px);
+  background: var(--cream);
+  padding: 24px var(--sp);
+
+  .filter-form {
+    @include df(normal, normal, column, 16px);
   }
+
   h3 {
     font-family: 'bilbo-swash-caps';
     text-align: center;
-    font-size: 1.5rem;
-    line-height: 1;
+    font-size: 1.6rem;
+    line-height: 1.1;
+    margin: 0;
   }
+
   .Searchbar {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
     border: 1px solid;
-    padding: 4px 8px;
+    border-radius: 22px;
+    padding: 6px 14px;
+    background: var(--bg);
+
+    &:focus-within {
+      outline: 2px solid var(--acc);
+      outline-offset: 2px;
+    }
+
     input {
       font-family: 'jetbrains-mono';
-      &::placeholder {
-        color: var(--dark);
-      }
+      background: transparent !important;
+      &::placeholder { color: var(--text); opacity: .7; }
     }
-    // .search-button {}
   }
+
   .filters {
-    @include df(normal, center, row wrap, 18px);
+    display: grid;
+    gap: 16px;
+    align-items: end;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
     .filter {
-      flex: 1;
-      label {
-        background: var(--cream) !important;
-      }
-      select,input {
-        border-radius: 22px !important;
-      }
+      label { background: var(--cream) !important; }
+      select, input { border-radius: 22px !important; }
     }
+  }
+
+  .clear-btn {
+    border: none;
+    background: none;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    justify-self: start;
+    padding: 8px 0;
+    color: var(--text);
+
+    &:hover { text-decoration-thickness: 2px; }
   }
 }
 
 .products {
   @include section-width;
-  .container  {
-    @include dg(auto-fit, 250px, 1fr, 8px);
+  padding: 40px var(--sp) 100px;
+
+  .container { @include df(normal, normal, column, 16px); }
+
+  .results-count { margin: 0; color: var(--medium); font-size: .9rem; }
+
+  .product-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+    @media (max-width: $mini-tab) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  }
+
+  .empty {
+    @include empty;
+    .clear-btn { @include btn; }
   }
 }
+
+
+
+
 

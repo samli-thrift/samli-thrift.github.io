@@ -1,0 +1,9 @@
+
+@use '../util/' as *;
+
+
+
+.product-grid {
+  @include dg(auto-fill, 200px,1fr,8px):
+  border: 2px solid red;
+}

@@ -1,7 +1,15 @@
 
 @font-face {
+  font-family: 'redaction';
+  src: url("../../assets/fonts/redaction.ttf");
+}
+@font-face {
   font-family: 'cascadia-code';
   src: url("../../assets/fonts/cascadia-code.ttf");
+}
+@font-face {
+  font-family: 'outfit';
+  src: url("../../assets/fonts/outfit.ttf");
 }
 @font-face {
   font-family: 'space-grotesk';
@@ -39,7 +47,7 @@ $cream: #fffdf5;
 $cream-200: rgba($cream, .1);
 
 :root {
-  --sp: clamp(10px, 5dvw, 10%);
+  --sp: clamp(8px, 5dvw, 10%);
   --text: #17231b;
   --text-rgb: 23, 35, 27;
   --inv-text: #fffdf5;
@@ -59,6 +67,8 @@ $cream-200: rgba($cream, .1);
   // Permanent Single Colors
   --dark: #2c1f02;
   --light: #ffffc0;
+  
+  --btn-hover: var(--dark-acc); 
 
   // Accent color
   --acc: rgb(245, 197, 24);
@@ -83,13 +93,15 @@ html.dark-mode {
   --inv-text: #000;
   --bg: #101914;
   --cream: #1d2a22;
-  --cream-10: rgba(237, 244, 237, 0.1);
-  --cream-50: rgba(237, 244, 237, 0.5);
+  --cream-100: rgba(237, 244, 237, 0.1);
+  --cream-500: rgba(237, 244, 237, 0.5);
   --dark-cream: #d6e2d7;
   --medium: #a8b8ac;
   --error: #ff8a80;
   --error-rgb: 255, 138, 128;
   --correct: #e5b94c;
   --active: #80bfff;
+  
+  --btn-hover: var(--acc);
 }
 

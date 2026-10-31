@@ -1,0 +1,4 @@
+{
+  "build": "cd \"/home/samli-thrift.github.io\" && quarks build",
+  "run": "cd \"/home/samli-thrift.github.io\" && quarks run"
+}

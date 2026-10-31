@@ -1,0 +1,176 @@
+
+@use '../util/' as *;
+
+.Contact {
+  @include df(normal, normal, column);
+}
+
+.contact_hero {
+  @include page-hero;
+}
+
+.contact_channels {
+  @include section-width;
+  padding: 100px var(--sp);
+  @media (max-width: $mini-tab) { padding: 60px var(--sp); }
+
+  .container { @include df(normal, normal, column, 24px); }
+  h2 { @include h2; }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  li {
+    border-radius: 16px;
+    @include card-shadow;
+    @include df(flex-start, flex-start, column, 10px);
+
+    h3 { margin: 0; font-size: 1.2rem; }
+    p  { margin: 0; line-height: 1.5; flex: 1; }
+    a  { @include btn; margin-top: 6px; }
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    counter-reset: step;
+    @include df(normal, normal, column, 16px);
+
+    li {
+      counter-increment: step;
+      position: relative;
+      border-radius: 16px;
+      padding: 18px 60px 18px 18px;
+      border: 1px solid var(--acc);
+      background: var(--bg);
+
+      &::before {
+        content: counter(step);
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+        font: 700 1.4rem 'cascadia-code';
+        color: var(--acc);
+      }
+
+      h3 { margin: 0 0 4px; font-size: 1.1rem; }
+      p  { margin: 0; line-height: 1.5; }
+    }
+  }
+    .icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid var(--acc);
+    background: var(--bg);
+  }
+}
+
+.contact_form {
+  @include section-width;
+  @include gradient-bg;
+  padding: 100px var(--sp);
+  @media (max-width: $mini-tab) { padding: 60px var(--sp); }
+
+  .container {
+    display: grid;
+    gap: 40px;
+    @media (min-width: $big-tab) {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  h2 { @include h2; }
+
+  form {
+    border-radius: 16px;
+    @include card-shadow;
+    @include df(normal, normal, column, 26px);
+
+    button { @include btn; }
+  }
+
+  .field {
+    position: relative;
+    @include df(normal, normal, column);
+
+    input, select, textarea {
+      @include input;
+      border-radius: 22px;
+    }
+    textarea { resize: vertical; }
+    select { appearance: none; }
+
+    label {
+      @include label-styling;
+      top: 0;
+    }
+  }
+}
+
+
+.how {
+    @include df(normal, normal, column, 24px);
+
+    ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: step;
+      @include df(normal, normal, column, 16px);
+    }
+
+    li {
+      counter-increment: step;
+      position: relative;
+      border-radius: 16px;
+      padding: 18px 60px 18px 18px;
+      border: 1px solid var(--acc);
+      background: var(--bg);
+
+      &::before {
+        content: counter(step);
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+        font: 700 1.4rem 'cascadia-code';
+        color: var(--acc);
+      }
+
+      h3 { margin: 0 0 4px; font-size: 1.1rem; }
+      p  { margin: 0; line-height: 1.5; }
+    }
+}
+
+.contact_cta {
+  @include section-width;
+  background: var(--acc);
+  color: var(--dark);
+  padding: 32px var(--sp);
+
+  .container { @include df(normal, flex-start, column, 14px); }
+
+  h2 {
+    @include h2;
+    &::after { display: none; }
+  }
+  p { margin: 0; line-height: 1.5; }
+
+  .btns {
+    @include df(normal, normal, row wrap, 18px);
+    a {
+      @include btn(var(--dark), transparent, var(--dark), var(--light), var(--dark));
+    }
+  }
+}

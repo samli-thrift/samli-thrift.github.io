@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import About from './pages/About'
 import Shop from './pages/Shop';
@@ -17,7 +17,7 @@ import './assets/icomoon/style.css';
 
 function App() {
 
-  return <BrowserRouter>
+  return <HashRouter>
     <PageContextProvider>
       <CartContextProvider>
         <Navbar />
@@ -33,7 +33,7 @@ function App() {
         <Footer />
       </CartContextProvider>
     </PageContextProvider>
-  </BrowserRouter>;
+  </HashRouter>;
 }
 
 export default App;

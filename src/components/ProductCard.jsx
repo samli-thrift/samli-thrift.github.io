@@ -1,38 +1,77 @@
 
 
-import ProductTemplate from '../assets/images/Kids.jpg';
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 import "../scss/components/ProductCard.scss";
 
-function ProductCard() {
+const formatPrice = (n) => `₦${n.toLocaleString("en-NG")}`;
+
+function ProductCard({ product }) {
+  const {
+    id,
+    image,
+    name,
+    price,
+    size,
+    condition = "Good",
+    status,
+    soldOut = false,
+  } = product;
+
+  const { carts, addToCart } = useContext(CartContext);
+  const inCart = carts.some((item) => item.id === id);
+
+  const handleAddToCart = () => addToCart(product);
+
   return (
-    <div className="product-card">
-      <div className="product-card-img">
-        <img src={ProductTemplate} alt="product cart img" />
-      </div>
+    <article className={`product-card ${soldOut ? "is-sold-out" : ""}`}>
+      <a href={`/product-details?id=${id}`} className="product-card-img">
+        <img src={image} alt={name} loading="lazy" />
+        {soldOut ? (
+          <span className="status sold">Sold out</span>
+        ) : (
+          status && <span className="status">{status}</span>
+        )}
+      </a>
+
       <div className="product-card-content">
-        <p className="status">new</p>
-        <div className="data">
-          <h4 className="name">Baggy Boyfriend jeans</h4>
-          {/* <p className="available">10 pieces</p> */}
-        </div>
+        <h4 className="name">
+          <a href={`/product-details?id=${id}`}>{name}</a>
+        </h4>
+
+        <ul className="meta">
+          {size && <li>Size {size}</li>}
+          <li className={`grade grade-${condition.toLowerCase().replace(/\s+/g, "-")}`}>
+            {condition}
+          </li>
+        </ul>
+
         <div className="buy">
-          <p className="price">₦50,000</p>
-          {/* <button
-            className="more-details-btn"
-            onClick={(e) => {
-              e.preventDefault()
-              // Do some navigation to /product-details?id:id
-            }}
+          <p className="price">{formatPrice(price)}</p>
+        </div>
+
+        {inCart && !soldOut ? (
+          <Link to="/cart" className="add-btn in-cart">
+            <i className="fa fa-check" aria-hidden="true"></i>
+            In cart · View cart
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="add-btn"
+            disabled={soldOut}
+            onClick={handleAddToCart}
           >
-            See more details...
-          </button> */}
-        </div>
-        <div className="more">
-          <button className="add-btn"><i className="fa fa-shopping-cart"></i>Add to Cart</button>
-        </div>
+            <i className="fa fa-shopping-cart" aria-hidden="true"></i>
+            {soldOut ? "Unavailable" : "Add to Cart"}
+          </button>
+        )}
       </div>
-    </div>
-  )
+    </article>
+  );
 }
 
-export default ProductCard
+export default ProductCard;
+
+

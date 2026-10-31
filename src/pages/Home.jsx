@@ -8,6 +8,38 @@ import ProductCard from '../components/ProductCard';
 import { useContext } from 'react';
 import { PageContext } from '../context/PageContext.jsx';
 
+import { products } from "../data/products";
+
+import { ShieldCheck, Tag, Search, BadgeCheck, Truck } from "lucide-react";
+
+const reasons = [
+  {
+    icon: ShieldCheck,
+    title: "Honest grading",
+    text: "Every item is checked for stains, wear and flaws. We grade it plainly and photograph any defects.",
+  },
+  {
+    icon: Tag,
+    title: "Affordable prices",
+    text: "Quality pieces at a fraction of retail, with no hidden fees at checkout.",
+  },
+  {
+    icon: Search,
+    title: "Carefully selected stock",
+    text: "We hand-pick every piece. If we wouldn't wear it ourselves, it doesn't get listed.",
+  },
+  {
+    icon: BadgeCheck,
+    title: "Trusted vendor",
+    text: "Real customer reviews and clear returns. [Add: years trading / orders shipped]",
+  },
+  {
+    icon: Truck,
+    title: "Nationwide delivery",
+    text: "Tracked delivery across the country, with dispatch within [X] working days.",
+  },
+];
+
 const categories = [
   {
     name: "Men's clothing",
@@ -65,26 +97,69 @@ const reviews = [
 
 const faqs = [
   {
-    question: <>When are you available?</>,
-    answer: <>Anytime and Everytime. Don't hesitate to contact us.</>,
+    question: "How do I place an order?",
+    answer: (
+      <>
+        Browse the store, then message us on <b>WhatsApp</b> about the item you
+        want. We discuss and agree on the price, you pay, and we arrange
+        delivery. The store is then updated to remove your bought items.
+      </>
+    ),
   },
   {
-    question: <>Why should I trust you?</>,
-    answer: <>I am verified on various facebook groups and have been patronised for over four years now. We have made over 250 happy online sales with returning customers. You can trust us.</>,
+    question: "Why should I trust you?",
+    answer: (
+      <>
+        We're verified on various Facebook groups and have been patronised for
+        over four years. We've made over <b>250 happy online sales</b>, many of
+        them to returning customers.
+      </>
+    ),
   },
   {
-    question: <>Is this website secure?</>,
-    answer: <>Very much so. It is! You don't make payments here, <b>we get to discuss, bargain and conclude first on whatsapp</b> before you pay and I make arrangements for delivery. Then, the store gets updated removing your bought items.</>,
+    question: "Is this website secure?",
+    answer: (
+      <>
+        Very much so. You don't make any payments on this website. We{" "}
+        <b>discuss, bargain and conclude on WhatsApp first</b>, and only then
+        do you pay and we arrange delivery.
+      </>
+    ),
   },
   {
-    question: <>How is delivery made?</>,
-    answer: <>By <b>waybill</b> to any of the 36 states of Nigeria.</>,
+    question: "How is delivery made?",
+    answer: (
+      <>
+        By <b>waybill</b> to any of the 36 states of Nigeria.
+      </>
+    ),
+  },
+  {
+    question: "How long does delivery take, and what does it cost?",
+    answer: <>[Typical delivery time, and how the waybill fee is worked out.]</>,
+  },
+  {
+    question: "Can I return or exchange an item?",
+    answer: <>[Your return or exchange policy, e.g. wrong size, item not as described.]</>,
+  },
+  {
+    question: "How is the condition of each item described?",
+    answer: (
+      <>
+        Every item is graded honestly, and any flaws are mentioned before you
+        pay. [Add: you can ask for extra photos or measurements on WhatsApp.]
+      </>
+    ),
+  },
+  {
+    question: "When are you available?",
+    answer: <>Anytime and every time. Don't hesitate to contact us.</>,
   },
 ];
 
 
 function Home() {
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const { theme } = useContext(PageContext);
 
   return <main className="Home home-page">
@@ -133,7 +208,7 @@ function Home() {
       <div className="container">
         <h2>Featured <span className="special">Products</span></h2>
         <div className="products-grid">
-          {feauturedProducts && feauturedProducts.map((each, i) => <ProductCard data={each} key={i}/>)}
+          {products && products.map((each, i) => <ProductCard product={each} key={i}/>)}
         </div>
       </div>
     </section>
@@ -141,15 +216,15 @@ function Home() {
     <section className="whychoose">
       <div className="container">
         <h2><span className="special">Why Shop with</span> SamLi Thrift</h2>
-        <div className="whychoose-content">
-          <ul>
-            <li>Honest grading</li>
-            <li>Affordable Prices</li>
-            <li>Carefully Selected Stock</li>
-            <li>Trusted Vendor</li>
-            <li>Nationwide delivery</li>
-          </ul>
-        </div>
+        <ul className="whychoose-grid">
+          {reasons.map(({ icon: Icon, title, text }) => (
+            <li key={title}>
+              <span className="icon"><Icon size={28} aria-hidden="true" /></span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
 
@@ -177,7 +252,7 @@ function Home() {
           {reviews && reviews.map((each, i) => <div className="review-card" key={i}>
             <i className="icon-quote"></i>
             <p>{each.review}</p>
-            <p className="name"><b> - {each.name}</b></p>
+            <h4 className="name"><b> - {each.name}</b></h4>
           </div>)}
         </div>
         <span className="small-talk">Over <b>500+</b> successful <b>online</b> sales with happy returning customers.</span>
