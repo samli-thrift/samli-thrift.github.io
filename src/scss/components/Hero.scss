@@ -1,0 +1,121 @@
+
+
+@use './vars' as *;
+@use './mixins' as *;
+@use './page_mixins' as *;
+
+@mixin page-hero {
+  @include gradient-bg;
+  @include section-width;
+  padding: 80px var(--sp);
+  @media (max-width: $mini-tab) { padding: 48px 0 56px; }
+
+  .container {
+    @include df(normal, center, row-reverse, clamp(24px, 5dvw, 56px));
+    @media (max-width: $mini-tab) { @include df(normal, center, column, 28px); }
+  }
+
+  // ---------- image ----------
+  .hero_img {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    @include df(normal, normal, column);
+
+    img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      max-height: 520px;
+      object-fit: cover;
+      display: block;
+      border-radius: 22px;
+      border: 1px solid var(--acc);
+      box-shadow: 10px 10px 0 var(--acc-300);
+    }
+
+    // Opt-in sticker: <div className="hero_img" data-tag="Pre-loved">
+    &[data-tag]::after {
+      content: attr(data-tag);
+      position: absolute;
+      top: 18px;
+      left: -12px;
+      padding: 8px 16px;
+      transform: rotate(-4deg);
+      background: var(--acc);
+      color: var(--dark);
+      border: 1.5px dashed var(--dark);
+      border-radius: 8px;
+      font: 700 .8rem 'jetbrains-mono';
+      letter-spacing: .06em;
+    }
+
+    @media (max-width: $mini-tab) {
+      width: 100%;
+      padding: 0 var(--sp) 10px;
+      img { aspect-ratio: 4 / 3; max-height: 320px; box-shadow: 6px 6px 0 var(--acc-300); }
+      &[data-tag]::after { left: calc(var(--sp) + 8px); top: 14px; }
+    }
+  }
+
+  // ---------- text ----------
+  .hero_content {
+    flex: 1.1;
+    min-width: 0;
+    @include df(normal, flex-start, column, 18px);
+
+    @media (max-width: $mini-tab) {
+      padding: 0 var(--sp);
+      text-align: center;
+      @include df(center, center, column, 16px);
+    }
+
+    // a label, not a button, so no hover or pointer
+    .eyebrow {
+      margin: 0;
+      padding: 6px 14px;
+      border: 1.5px dashed var(--text);
+      border-radius: 999px;
+      background: var(--cream);
+      font: 700 .78rem 'jetbrains-mono';
+      letter-spacing: .06em;
+    }
+
+    h1.slogan {
+      margin: 0;
+      font-size: clamp(2.7rem, 6dvw, 4.4rem);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      text-wrap: balance;
+    }
+
+    p:not(.eyebrow) {
+      margin: 0;
+      max-width: 48ch;
+      line-height: 1.6;
+      font-size: clamp(1rem, 4dvw, 1.15rem);
+    }
+
+    .cta {
+      margin-top: 6px;
+      @include df(normal, center, row wrap, 14px);
+      @media (max-width: $mini-tab) { justify-content: center; }
+
+      a { @include btn(var(--dark), var(--acc), var(--dark), var(--light-acc), var(--dark)); }
+      a:last-child { @include btn(var(--text), transparent, var(--text), var(--acc-100), var(--text)); }
+    }
+
+    // optional proof strip under the buttons
+    .trust {
+      list-style: none;
+      margin: 10px 0 0;
+      padding: 14px 0 0;
+      border-top: 1px solid var(--acc-300);
+      width: 100%;
+      @include df(normal, normal, row wrap, 10px 28px);
+      @media (max-width: $mini-tab) { justify-content: center; }
+
+      li { font-size: .9rem; color: var(--medium); }
+      strong { font: 700 1.25rem 'cascadia-code'; color: var(--text); margin-right: 6px; }
+    }
+  }
+}
