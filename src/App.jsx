@@ -8,6 +8,7 @@ import Cart from './pages/Cart';
 import ProductDetails from './pages/ProductDetails';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 
 import CartContextProvider from './context/CartContext.jsx';
 import PageContextProvider from './context/PageContext.jsx';
@@ -18,6 +19,8 @@ import './assets/icomoon/style.css';
 function App() {
 
   return <HashRouter>
+    <ScrollToTop/>
+
     <PageContextProvider>
       <CartContextProvider>
         <Navbar />

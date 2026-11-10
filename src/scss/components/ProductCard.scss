@@ -15,6 +15,9 @@
   &:hover {
     transform: translateY(-4px);
     @include card-shadow;
+    & {
+      padding: 0;
+    }
   }
 
   &-img {
