@@ -4,10 +4,9 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
-import {products} from "../data/products"; // adjust to your products file
+import { WHATSAPP } from "../data/contact.js";
+import { useProducts } from "../context/ProductsContext";
 
-// Same number as Cart.jsx
-const WHATSAPP_NUMBER = "2348038849000";
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString("en-NG")}`;
 const label = (c) => c.replace(/-/g, " ");
@@ -20,6 +19,7 @@ const GRADES = {
 };
 
 export default function ProductDetails() {
+  const { products, loading } = useProducts();
   const [params] = useSearchParams();
   const id = params.get("id");
   const product = products.find((p) => String(p.id) === String(id));
@@ -39,6 +39,14 @@ export default function ProductDetails() {
       ? `${product.name} | SamLi Thrift`
       : "Product not found | SamLi Thrift";
   }, [product]);
+
+  if (loading) {
+    return (
+      <main className="ProductDetails">
+        <section className="pd_main"><div className="container"><p>Loading…</p></div></section>
+      </main>
+    );
+  }
 
   if (!product) {
     return (
@@ -60,15 +68,11 @@ export default function ProductDetails() {
   }
 
   const {
-    name,
-    price,
-    size,
-    condition = "Good",
-    status,
-    soldOut = false,
-    description,
-    category,
+    name, price, size, condition = "Good", status,
+    soldOut = false, description,
+    category = [],
   } = product;
+  const mainCategory = category[0];
 
   const gallery = product.images?.length ? product.images : [product.image];
   const inCart = carts.some((i) => String(i.id) === String(product.id));
@@ -85,7 +89,7 @@ export default function ProductDetails() {
       condition,
     });
 
-  const askUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const askUrl = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(
     `Hello SamLi Thrift, I'm interested in "${name}" (${naira(price)}). Is it still available?`
   )}`;
 
@@ -93,10 +97,16 @@ export default function ProductDetails() {
     (p) => String(p.id) !== String(product.id) && !p.soldOut
   );
 
+  const shares = (a = [], b = []) => a.some((x) => b.includes(x));
+
   const related = [
-    ...available.filter((p) => p.category === category),
-    ...available.filter((p) => p.category !== category && p.style === product.style),
-    ...available.filter((p) => p.category !== category && p.style !== product.style),
+    ...available.filter((p) => shares(p.category, product.category)),
+    ...available.filter(
+      (p) => !shares(p.category, product.category) && shares(p.style, product.style)
+    ),
+    ...available.filter(
+      (p) => !shares(p.category, product.category) && !shares(p.style, product.style)
+    ),
   ].slice(0, 4);
 
   return (
@@ -143,7 +153,7 @@ export default function ProductDetails() {
           </div>
 
           <div className="pd_info">
-            {category && <span className="eyebrow">{label(category)}</span>}
+            {mainCategory && <span className="eyebrow">{label(mainCategory)}</span>}
             <h1>{name}</h1>
             <p className="price">{naira(price)}</p>
 

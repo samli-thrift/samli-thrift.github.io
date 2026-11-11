@@ -10,7 +10,7 @@
   &:hover,
   &[open] {
     @include card-shadow;
-    @media (min-width: $tab) {
+    @media (max-width: $tab) {
       padding: 0;
     }
   }

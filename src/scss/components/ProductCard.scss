@@ -46,13 +46,13 @@
     top: 8px;
     left: 8px;
     padding: 4px 10px;
-    border: 1px solid var(--text);
+    border: 1px solid var(--dark);
     border-radius: 22px;
     background: var(--acc-500);
-    color: var(--text);
+    color: var(--dark);
     font-weight: 700;
-    font-size: .85rem;
-    text-transform: capitalize;
+    font-size: .7rem;
+    text-transform: uppercase;
 
     &.sold { background: var(--text); color: #fff; }
   }

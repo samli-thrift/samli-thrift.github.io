@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import "../scss/components/ProductCard.scss";
 
-const formatPrice = (n) => `₦${n.toLocaleString("en-NG")}`;
+const formatPrice = (n) => `₦${Number(n || 0).toLocaleString("en-NG")}`;
 
 function ProductCard({ product }) {
   const {
@@ -28,8 +28,7 @@ function ProductCard({ product }) {
   return (
     <article className={`product-card ${soldOut ? "is-sold-out" : ""}`}>
       <Link to={`/product-details?id=${id}`} className="product-card-img">
-        <img src={image} alt={name} loading="lazy" />
-        {soldOut ? (
+        <img src={image || "/placeholder.png"} alt={name} loading="lazy" />        {soldOut ? (
           <span className="status sold">Sold out</span>
         ) : (
           status && <span className="status">{status}</span>
@@ -38,7 +37,7 @@ function ProductCard({ product }) {
 
       <div className="product-card-content">
         <h4 className="name">
-          <Link to={`/product-detLinkils?id=${id}`}>{name}</Link>
+          <Link to={`/product-details?id=${id}`}>{name}</Link>
         </h4>
 
         <ul className="meta">

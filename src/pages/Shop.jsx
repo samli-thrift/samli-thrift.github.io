@@ -1,12 +1,12 @@
-import { useMemo } from "react";
+import { useId, useMemo, useRef } from "react";
 import { NavLink, useSearchParams } from "react-router-dom";
 import HeroImg from "../assets/images/kids.jpg";
 
 import "../scss/pages/Shop.scss";
+import "../scss/components/Searchbar.scss"; // SearchBar.jsx used to import this for us
 import { DropdownField } from "../components/InputField.jsx";
-import SearchBar from "../components/SearchBar.jsx";
 import ProductGrid from "../components/ProductGrid.jsx";
-import { products } from "../data/products";
+import { useProducts } from "../context/ProductsContext";
 
 const options = {
   category: [
@@ -37,14 +37,20 @@ const options = {
   ],
 };
 
+// "environment" -> "Environment"
+const toLabel = (key) => key.charAt(0).toUpperCase() + key.slice(1);
+
 function Shop() {
   const [params, setParams] = useSearchParams();
+  const searchId = useId();
+  const searchRef = useRef(null);
+  
+  const { products, loading, error } = useProducts();
 
-  const values = {
-    category: params.get("category") ?? "all",
-    style: params.get("style") ?? "all",
-    environment: params.get("environment") ?? "all",
-  };
+  // { category: "all", style: "all", environment: "all" } built from the options keys
+  const values = Object.fromEntries(
+    Object.keys(options).map((key) => [key, params.get(key) ?? "all"])
+  );
   const query = params.get("q") ?? "";
 
   function updateParam(key, value) {
@@ -59,24 +65,29 @@ function Shop() {
     );
   }
 
-  const handleValues = (property, value) => updateParam(property, value);
   const handleReset = () => setParams({}, { replace: true });
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    searchRef.current?.blur(); // closes the mobile keyboard
+  };
+
   const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = (params.get("q") ?? "").trim().toLowerCase();
+    const get = (key) => params.get(key) ?? "all";
     return products
       .filter(
         (p) =>
-          (values.category === "all" || p.category === values.category) &&
-          (values.style === "all" || p.style === values.style) &&
-          (values.environment === "all" ||
-            p.environment === values.environment ||
+          (get("category") === "all" || p.category.includes(get("category"))) &&
+          (get("style") === "all" || p.style.includes(get("style"))) &&
+          (get("environment") === "all" ||
+            p.environment === get("environment") ||
             p.environment === "everywhere") &&
           (!q || p.name.toLowerCase().includes(q))
       )
       // available items first, sold-out last
       .sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
-  }, [values.category, values.style, values.environment, query]);
+  }, [params, products]);
 
   return (
     <main className="Shop shop-page">
@@ -98,49 +109,91 @@ function Shop() {
         </div>
       </section>
 
-      <aside className="filter-header" aria-label="Search and filter products">
+      <section className="filter-header" aria-labelledby="filter-title">
         <div className="container">
-          <form role="search" className="filter-form" onSubmit={(e) => e.preventDefault()}>
-            <h3>Find your next favourite piece</h3>
+          <form role="search" className="filter-form" onSubmit={handleSearchSubmit}>
+            <h2 id="filter-title" className="filter-title">
+              Find your next favourite piece
+            </h2>
 
-            <SearchBar
-              className="filtervariation"
-              value={query}
-              onChange={(v) => updateParam("q", v)}
-            />
+            <div className="Searchbar filtervariation">
+              <input
+                ref={searchRef}
+                id={searchId}
+                type="search"
+                name="q"
+                value={query}
+                placeholder="Search SamLi..."
+                aria-label="Search products"
+                autoComplete="off"
+                enterKeyHint="search"
+                onChange={(e) => updateParam("q", e.target.value)}
+              />
+
+              {query && (
+                <button
+                  type="button"
+                  className="search-clear"
+                  aria-label="Clear search"
+                  onClick={() => updateParam("q", "")}
+                >
+                  <i className="icon-close" aria-hidden="true"></i>
+                </button>
+              )}
+
+              <button type="submit" className="search-btn" aria-label="Search">
+                <i className="icon-search1" aria-hidden="true"></i>
+              </button>
+            </div>
 
             <div className="filters">
-              <DropdownField label="Category" name="category" value={values.category}
-                options={options.category} onChange={handleValues} classNames={["filter"]} />
-              <DropdownField label="Style" name="style" value={values.style}
-                options={options.style} onChange={handleValues} classNames={["filter"]} />
-              <DropdownField label="Environment" name="environment" value={values.environment}
-                options={options.environment} onChange={handleValues} classNames={["filter"]} />
+              {Object.entries(options).map(([name, opts]) => (
+                <DropdownField
+                  key={name}
+                  label={toLabel(name)}
+                  name={name}
+                  value={values[name]}
+                  options={opts}
+                  onChange={updateParam}
+                  classNames={["filter"]}
+                />
+              ))}
               <button type="button" className="clear-btn" onClick={handleReset}>
                 Clear filters
               </button>
             </div>
           </form>
         </div>
-      </aside>
+      </section>
 
-      <section className="products" id="products">
+      <section className="products" id="products" aria-label="Products">
         <div className="container">
-          <p className="results-count" aria-live="polite">
-            {results.length} {results.length === 1 ? "piece" : "pieces"} found
-          </p>
-
-          {results.length ? (
-            <ProductGrid products={results} />
-          ) : (
+          {loading ? (
+            <p className="results-count">Loading pieces…</p>
+          ) : error ? (
             <div className="empty">
-              <i className="fa fa-search" aria-hidden="true"></i>
-              <p>No pieces match those filters yet.</p>
-              <p>New stock arrives often, or ask us on WhatsApp.</p>
-              <button type="button" className="clear-btn" onClick={handleReset}>
-                Clear filters
-              </button>
+              <p>Couldn't load the store right now.</p>
+              <p>Please refresh, or reach us on WhatsApp.</p>
             </div>
+          ) : (
+            <>
+              <p className="results-count" aria-live="polite">
+                {results.length} {results.length === 1 ? "piece" : "pieces"} found
+              </p>
+    
+              {results.length ? (
+                <ProductGrid products={results} />
+              ) : (
+                <div className="empty">
+                  <i className="fa fa-search" aria-hidden="true"></i>
+                  <p>No pieces match those filters yet.</p>
+                  <p>New stock arrives often, or ask us on WhatsApp.</p>
+                  <button type="button" className="clear-btn" onClick={handleReset}>
+                    Clear filters
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

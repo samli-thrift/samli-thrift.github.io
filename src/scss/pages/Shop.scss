@@ -9,7 +9,7 @@
   }
 }
 
-aside.filter-header {
+.filter-header {
   @include section-width;
   border-top: 1px solid var(--acc);
   border-bottom: 1px solid var(--acc);
@@ -20,7 +20,7 @@ aside.filter-header {
     @include df(normal, normal, column, 16px);
   }
 
-  h3 {
+  .filter-title {
     font-family: 'bilbo-swash-caps';
     text-align: center;
     font-size: 1.6rem;

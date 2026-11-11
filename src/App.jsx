@@ -15,6 +15,7 @@ import PageContextProvider from './context/PageContext.jsx';
 
 import './assets/fontawesome/css/font-awesome.min.css';
 import './assets/icomoon/style.css';
+import { ProductsProvider } from './context/ProductsContext.jsx';
 
 function App() {
 
@@ -22,19 +23,21 @@ function App() {
     <ScrollToTop/>
 
     <PageContextProvider>
-      <CartContextProvider>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/shop' element={<Shop />} />
-          <Route path='/product-details' element={<ProductDetails />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/cart' element={<Cart />} />
-        </Routes>
+      <ProductsProvider>
+        <CartContextProvider>
+          <Navbar />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/shop' element={<Shop />} />
+            <Route path='/product-details' element={<ProductDetails />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/cart' element={<Cart />} />
+          </Routes>
 
-        <Footer />
-      </CartContextProvider>
+          <Footer />
+        </CartContextProvider>
+      </ProductsProvider>
     </PageContextProvider>
   </HashRouter>;
 }

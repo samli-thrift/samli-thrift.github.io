@@ -23,7 +23,14 @@
     color: var(--dark);
 
     ul {
-      padding: 22px var(--sp);
+      margin: 22px var(--sp);
+      max-width: var(--max-w);
+      width: 100%;
+      justify-self: center;
+      @media (max-width: $desktop) {
+        padding: 0px var(--sp) 0px;
+      }
+
       display: grid;
       gap: 18px;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -44,7 +51,18 @@
 
   // ---------- Main columns ----------
   .main {
-    padding: 52px var(--sp) 40px;
+    //Positioning
+    max-width: var(--max-w);
+    width: 100%;
+    // justify-self: center;
+    align-self: center;
+    padding: 52px 0 40px 0;
+    margin: 0 var(--sp);
+    @media (max-width: $desktop) {
+      padding: 52px var(--sp) 40px;
+    }
+
+    // Now, normal styling
     display: grid;
     gap: 36px;
     grid-template-columns: 1.6fr 1fr 1fr 1.4fr;
