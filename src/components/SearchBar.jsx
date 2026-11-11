@@ -1,41 +1,60 @@
-
-
-import { useState } from 'react';
+import { useState, useEffect, useId } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import '../scss/components/Searchbar.scss';
-import { useNavigate } from 'react-router-dom';
 
-function SearchBar({
-  classNames = [],
-}) {
-  const [value, setValue] = useState('');
-  const navigate = useNavigate()
+function SearchBar({ classNames = [] }) {
+  const id = useId();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const urlQuery = params.get('search') ?? '';
+  const [value, setValue] = useState(urlQuery);
 
-  function handleSearch() {
+  // keep the box in sync with the URL (back/forward, links from elsewhere)
+  useEffect(() => { setValue(urlQuery); }, [urlQuery]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const q = value.trim();
     navigate({
-      pathname: "/shop",
-      searchParams: `?search=${value}`,
+      pathname: '/shop',
+      search: q ? `?search=${encodeURIComponent(q)}` : '',
     });
-    // Supposed to work.
-  };
+    e.currentTarget.querySelector('input')?.blur(); // closes the mobile keyboard
+  }
 
-  return <form className={`Searchbar ${classNames && classNames.join(' ')}`}>
-    <input
-      type="search"
-      id='search_input'
-      value={value}
-      placeholder='Search Samli...'
-      onChange={(e) => setValue(e.target.value)}
-    />
-    <button
-      className="search-btn"
-      onClick={(e) => {
-        e.preventDefault();
-        handleSearch();
-      }}
+  return (
+    <form
+      className={`Searchbar ${classNames.join(' ')}`}
+      role="search"
+      onSubmit={handleSubmit}
     >
-      <i className="icon-search1"></i>
-    </button>
-  </form>;
+      <input
+        id={id}
+        type="search"
+        value={value}
+        placeholder="Search SamLi..."
+        aria-label="Search products"
+        autoComplete="off"
+        enterKeyHint="search"
+        onChange={(e) => setValue(e.target.value)}
+      />
+
+      {value && (
+        <button
+          type="button"
+          className="clear-btn"
+          aria-label="Clear search"
+          onClick={() => setValue('')}
+        >
+          <i className="icon-close"></i>
+        </button>
+      )}
+
+      <button type="submit" className="search-btn" aria-label="Search">
+        <i className="icon-search1"></i>
+      </button>
+    </form>
+  );
 }
 
 export default SearchBar;

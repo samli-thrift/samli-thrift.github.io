@@ -81,7 +81,7 @@ function Home() {
           <img src={HeroImg} alt="Children wearing thrifted clothes" />
         </div>
         <div className="hero_content">
-          <p className="eyebrow">Welcome to SamLi Thrift Collections</p>
+          <span className="eyebrow">Welcome to SamLi Thrift Collections</span>
           <h1 className="slogan" id="hero-title">
             Where <span className="special">Quality</span> meets <span className="special">Affordability</span>
           </h1>
@@ -96,7 +96,7 @@ function Home() {
 
     <section className="shopby" aria-labelledby="shopby-title">
       <div className="container">
-        <h2 id="shopby-title"><span className="special">Shop</span> by category</h2>
+        <h2 id="shopby-title"><span className="special">Shop</span> by Category</h2>
         <ul className="categories">
           {categories.map(({ link, linkText }) => (
             <li key={linkText}>

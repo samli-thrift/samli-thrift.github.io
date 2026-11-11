@@ -14,16 +14,24 @@ $pad-sm: 60px var(--sp);
   scroll-behavior: smooth;
   scrollbar-width: none;
   @include df(normal, stretch, row, 16px);
-  &::-webkit-scrollbar { display: none; }
 
-  > li {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  >li {
     flex: 0 0 min($w, 80%);
     scroll-snap-align: start;
     display: flex;
-    > * { flex: 1; }
+
+    >* {
+      flex: 1;
+    }
   }
 
-  @media (prefers-reduced-motion: reduce) { scroll-behavior: auto; }
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
 
   @supports selector(::scroll-button(*)) {
     anchor-name: $anchor;
@@ -44,23 +52,43 @@ $pad-sm: 60px var(--sp);
       color: var(--dark);
       font: 700 1.2rem 'jetbrains-mono';
       cursor: pointer;
-      box-shadow: 3px 3px 0 var(--acc-300);
+      // box-shadow: 3px 3px 0 var(--acc-300);
       transition: background .3s, opacity .3s;
       @include df(center, center);
 
-      &:hover:not(:disabled) { background: var(--light-acc); }
-      &:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
-      &:disabled { opacity: .3; cursor: default; box-shadow: none; }
+      &:hover:not(:disabled) {
+        background: var(--light-acc);
+      }
+
+      &:focus-visible {
+        outline: 3px solid var(--text);
+        outline-offset: 3px;
+      }
+
+      &:disabled {
+        opacity: .3;
+        cursor: default;
+        box-shadow: none;
+      }
     }
-    &::scroll-button(left)  { content: "←" / "Previous"; left: calc(anchor(left) + 6px); }
-    &::scroll-button(right) { content: "→" / "Next"; right: calc(anchor(right) + 6px); }
+
+    &::scroll-button(left) {
+      content: "←" / "Previous";
+      left: calc(anchor(left) - 22px);
+    }
+
+    &::scroll-button(right) {
+      content: "→" / "Next";
+      right: calc(anchor(right) - 22px);
+    }
 
     // dots, one per <li>
     &::scroll-marker-group {
       padding-top: 6px;
       @include df(center, center, row, 10px);
     }
-    > li::scroll-marker {
+
+    >li::scroll-marker {
       content: "";
       width: 10px;
       height: 10px;
@@ -68,9 +96,21 @@ $pad-sm: 60px var(--sp);
       border: 1.5px solid var(--text);
       cursor: pointer;
       transition: all .3s;
-      &:hover { background: var(--acc-300); }
-      &:target-current { background: var(--acc); width: 22px; border-radius: 10px; }
-      &:focus-visible { outline: 3px solid var(--acc); outline-offset: 3px; }
+
+      &:hover {
+        background: var(--acc-300);
+      }
+
+      &:target-current {
+        background: var(--acc);
+        width: 22px;
+        border-radius: 10px;
+      }
+
+      &:focus-visible {
+        outline: 3px solid var(--acc);
+        outline-offset: 3px;
+      }
     }
   }
 }
@@ -85,38 +125,59 @@ $pad-sm: 60px var(--sp);
   }
 }
 
-.home_hero { @include page-hero; }
+.home_hero {
+  @include page-hero;
+}
 
 .shopby {
   @include section-width;
-  background: var(--cream);
+  background: linear-gradient(to bottom, var(--cream), var(--bg));
   padding: $pad;
-  @media (max-width: $mini-tab) { padding: $pad-sm; }
+  border-top: 1px solid var(--acc-300);
 
-  .container { @include df(normal, normal, column, 18px); }
-  h2 { @include h2; }
-  .categories { @include carousel(--cat-carousel, 240px); }
+  @media (max-width: $mini-tab) {
+    padding: $pad-sm;
+  }
+
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+
+  h2 {
+    // @include h2;
+    font-size: clamp(2rem, 5dvw, 2.5rem);
+  }
+
+  .categories {
+    @include carousel(--cat-carousel, 240px);
+  }
 
   .category {
     flex: 1;
     color: var(--text);
     text-decoration: none;
     border: 1px solid var(--acc);
-    border-radius: 22px;
+    border-radius: 16px;
     background: var(--bg);
     overflow: hidden;
-    transition: transform .3s, box-shadow .3s;
+    transition: all .3s;
     @include df(normal, normal, column);
 
     &:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0 var(--acc-300);
+      transform: translateY(-4px);
+      // box-shadow: 5px 5px 0 var(--acc-300);
     }
 
     .img {
       aspect-ratio: 4 / 5;
       overflow: hidden;
-      img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
     }
 
     .label {
@@ -130,20 +191,40 @@ $pad-sm: 60px var(--sp);
 .featured {
   @include section-width;
   padding: $pad;
-  @media (max-width: $mini-tab) { padding: $pad-sm; }
 
-  .container { @include df(normal, normal, column, 18px); }
-  h2 { @include h2; }
-  .products-grid { @include carousel(--featured-carousel, 250px); }
+  @media (max-width: $mini-tab) {
+    padding: $pad-sm;
+  }
+
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+
+  h2 {
+    // @include h2;
+    font-size: clamp(2rem, 5dvw, 2.5rem);
+  }
+
+  .products-grid {
+    @include carousel(--featured-carousel, 250px);
+  }
 }
 
 .whychoose {
   @include section-width;
   padding: $pad;
-  @media (max-width: $mini-tab) { padding: $pad-sm; }
 
-  .container { @include df(normal, normal, column, 18px); }
-  h2 { @include h2; }
+  @media (max-width: $mini-tab) {
+    padding: $pad-sm;
+  }
+
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+
+  h2 {
+    @include h2;
+  }
 
   &-grid {
     padding: 0;
@@ -170,8 +251,17 @@ $pad-sm: 60px var(--sp);
       background: var(--bg);
     }
 
-    h3 { font-size: 1.2rem; font-weight: 600; margin: 0; }
-    p  { font-size: 1rem; line-height: 1.5; margin: 0; }
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0;
+    }
   }
 }
 
@@ -181,11 +271,16 @@ $pad-sm: 60px var(--sp);
   background-color: var(--text);
   color: var(--bg);
 
-  .container { @include df(normal, normal, column, 18px); }
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
 
   &-content {
     @include df(center, center, column, 16px);
-    @media (min-width: $mini-tab) { @include df(normal, center, row, 36px); }
+
+    @media (min-width: $mini-tab) {
+      @include df(normal, center, row, 36px);
+    }
   }
 
   .img {
@@ -196,7 +291,13 @@ $pad-sm: 60px var(--sp);
     aspect-ratio: 1;
     border-radius: 50%;
     overflow: hidden;
-    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   }
 
   .text {
@@ -204,19 +305,30 @@ $pad-sm: 60px var(--sp);
     text-align: center;
     @include df(center, center, column, 10px);
 
-    h2 { @include eyebrow; color: var(--bg); }
+    h2 {
+      @include eyebrow;
+      color: var(--bg);
+    }
+
     h3 {
       @include h2;
+
       &.light-mode .special {
         -webkit-text-stroke-color: var(--acc);
         -webkit-text-fill-color: var(--text);
       }
+
       &.dark-mode .special {
         -webkit-text-stroke-color: var(--bg);
         -webkit-text-fill-color: var(--acc);
       }
     }
-    p { line-height: 1.6; max-width: 60ch; margin: 0; }
+
+    p {
+      line-height: 1.6;
+      max-width: 60ch;
+      margin: 0;
+    }
 
     .seemore-btn {
       @include btn(var(--bg), transparent, var(--acc), var(--acc-100), var(--acc));
@@ -225,7 +337,15 @@ $pad-sm: 60px var(--sp);
     @media (min-width: $mini-tab) {
       text-align: left;
       @include df(normal, flex-start, column, 10px);
-      h3 { justify-content: left; align-items: start; .special { padding: 0; } }
+
+      h3 {
+        justify-content: left;
+        align-items: start;
+
+        .special {
+          padding: 0;
+        }
+      }
     }
   }
 }
@@ -233,12 +353,28 @@ $pad-sm: 60px var(--sp);
 .reviews {
   @include section-width;
   padding: $pad;
-  @media (max-width: $mini-tab) { padding: $pad-sm; }
 
-  .container { @include df(normal, normal, column, 18px); }
-  h2 { @include h2; }
-  .small-talk { text-align: center; margin: 0; }
-  .reviews-grid { @include carousel(--reviews-carousel, 300px); }
+  @media (max-width: $mini-tab) {
+    padding: $pad-sm;
+  }
+
+  .container {
+    @include df(normal, normal, column, 18px);
+  }
+
+  h2 {
+    @include h2;
+  }
+
+  .small-talk {
+    text-align: center;
+    margin: 0;
+  }
+
+  .reviews-grid {
+    @include carousel(--reviews-carousel, 300px);
+    @include df(center, center, row, 22px);
+  }
 
   .review-card {
     margin: 0;
@@ -247,8 +383,24 @@ $pad-sm: 60px var(--sp);
     @include card-shadow;
     @include df(space-between, normal, column, 14px);
 
-    blockquote { margin: 0; p { margin: 0; line-height: 1.6; } }
-    .name { align-self: flex-end; font-weight: 700; &::before { content: '— '; } }
+    blockquote {
+      margin: 0;
+
+      p {
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
+
+    .name {
+      align-self: flex-end;
+      font-weight: 700;
+
+      &::before {
+        content: '— ';
+      }
+    }
+
     i {
       position: absolute;
       top: 0;
@@ -262,10 +414,19 @@ $pad-sm: 60px var(--sp);
 .faqs {
   @include section-width;
   padding: $pad;
-  @media (max-width: $mini-tab) { padding: $pad-sm; }
 
-  .container { @include df(normal, normal, column, 24px); }
-  h2 { @include h2; text-align: center; }
+  @media (max-width: $mini-tab) {
+    padding: $pad-sm;
+  }
+
+  .container {
+    @include df(normal, normal, column, 24px);
+  }
+
+  h2 {
+    @include h2;
+    text-align: center;
+  }
 
   &-content {
     width: 100%;
@@ -281,15 +442,33 @@ $pad-sm: 60px var(--sp);
   color: var(--dark);
   padding: 32px var(--sp);
 
-  .container { @include df(normal, flex-start, column, 14px); }
-  h2 { @include h2; &::after { display: none; } }
+  .container {
+    @include df(normal, flex-start, column, 14px);
+  }
+
+  h2 {
+    @include h2;
+
+    &::after {
+      display: none;
+    }
+  }
 
   .btns {
     @include df(normal, normal, row wrap, 18px);
-    a { @include btn(var(--dark), transparent, var(--dark), var(--light), var(--dark)); }
+
+    a {
+      @include btn(var(--dark), transparent, var(--dark), var(--light), var(--dark));
+    }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shopby .category { transition: none; &:hover { transform: none; } }
+  .shopby .category {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
 }

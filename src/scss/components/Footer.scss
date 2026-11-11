@@ -5,82 +5,139 @@
   color: var(--light);
   @include df(normal, normal, column);
 
-  .container {
-    padding: 52px var(--sp);
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--acc);
+    outline-offset: 3px;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  h3 { margin: 0 0 14px; @include eyebrow; }
+
+  // ---------- Trust strip ----------
+  .trust {
+    background: var(--acc);
+    color: var(--dark);
+
+    ul {
+      padding: 22px var(--sp);
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+    li { @include df(normal, center, row, 14px); }
+    i {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--dark);
+      border-radius: 50%;
+      font-size: 1.3rem;
+      @include df(center, center);
+    }
+    strong { display: block; }
+    span { font-size: .85rem; opacity: .85; }
+  }
+
+  // ---------- Main columns ----------
+  .main {
+    padding: 52px var(--sp) 40px;
     display: grid;
-    gap: 32px;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    align-items: start;
+    gap: 36px;
+    grid-template-columns: 1.6fr 1fr 1fr 1.4fr;
 
     @media (max-width: $big-tab) {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       .brand { grid-column: 1 / -1; }
     }
-
     @media (max-width: $mini-tab) {
-      grid-template-columns: 1fr;
-      justify-items: center;
-      text-align: center;
-      gap: 28px;
+      grid-template-columns: 1fr 1fr;
+      .brand, .contact { grid-column: 1 / -1; }
     }
   }
 
   .logo {
-    font-family: 'bilbo-swash-caps';
-    font-size: 2rem;
-    line-height: 1;
+    font: 400 2rem/1 'bilbo-swash-caps';
   }
-
   .tagline {
-    margin: 8px 0 0;
+    margin: 10px 0 0;
+    max-width: 32ch;
     font-size: .95rem;
     opacity: .85;
-    max-width: 32ch;
   }
 
-  .connect-title {
-    margin: 0 0 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
+  .socials {
+    margin-top: 18px;
+    @include df(normal, center, row wrap, 10px);
+
+    a {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--acc-500);
+      border-radius: 50%;
+      font-size: 1.1rem;
+      transition: all .3s;
+      @include df(center, center);
+
+      &:hover {
+        background: var(--acc);
+        border-color: var(--acc);
+        color: var(--dark);
+      }
+    }
+  }
+
+  // Link columns
+  .col ul { @include df(normal, flex-start, column, 4px); }
+  .col a {
+    display: inline-block;
+    padding: 4px 0;
+    opacity: .85;
+    border-bottom: 1px solid transparent;
+    transition: all .3s;
+    &:hover { color: var(--acc); opacity: 1; border-color: var(--acc); }
+  }
+
+  .contact li {
+    font-size: .95rem;
+    @include df(normal, flex-start, row, 10px);
+    padding: 4px 0;
+    i {
+      color: var(--acc);
+      width: 1.1em;
+      margin-top: 4px;
+      text-align: center;
+    }
+  }
+
+  // ---------- Bottom bar ----------
+  .bottom {
+    padding: 14px var(--sp);
+    border-top: 1px solid var(--acc-300);
     font-size: .8rem;
-    color: var(--acc);
-  }
-
-  .links {
-    @include df(flex-start, center, row wrap, 8px);
+    @include df(space-between, center, row wrap, 10px);
 
     @media (max-width: $mini-tab) {
       justify-content: center;
-    }
-
-    a {
-      @include btn(var(--dark), var(--acc), var(--dark), var(--light), var(--acc));
-      & { font-size: 1.2rem; }
+      text-align: center;
     }
   }
 
-  .more-links {
-    @include df(normal, flex-start, column, 8px);
-
-    @media (max-width: $mini-tab) {
-      align-items: center;
-    }
-
-    a {
-      @include btn(var(--dark), var(--acc), var(--dark), var(--light), var(--acc));
-    }
-  }
-
-  a:focus-visible {
-    outline: 2px solid var(--acc);
-    outline-offset: 2px;
-  }
-
-  .copyright {
-    padding: 12px var(--sp);
-    border-top: 1px solid var(--acc-300);
-    font-size: .8rem;
-    text-align: center;
+  .to-top {
+    background: none;
+    border: 1px solid var(--acc-500);
+    border-radius: 22px;
+    color: inherit;
+    cursor: pointer;
+    padding: 6px 14px;
+    font: 700 .7rem 'jetbrains-mono';
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    transition: all .3s;
+    @include df(center, center, row, 8px);
+    &:hover { background: var(--acc); border-color: var(--acc); color: var(--dark); }
   }
 }
