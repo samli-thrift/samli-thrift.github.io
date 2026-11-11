@@ -221,7 +221,7 @@ export function DropdownField({
       >
         {options && options.map((option, i) => <option
           key={i}
-          value={option.value} selected={value === option.value}
+          value={option.value}
         >
           { typeof option.value == 'string'
             ? option.label.replaceAll('-', ' ')
