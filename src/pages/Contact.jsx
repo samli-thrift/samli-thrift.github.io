@@ -6,9 +6,7 @@ import { useState } from "react";
 import "../scss/pages/Contact.scss";
 import { MessageCircle, Users, Truck } from "lucide-react";
 
-// TODO: replace with real details (number in international format, no + or spaces)
-const WHATSAPP = "2348038849000";
-const FACEBOOK = "https://facebook.com/your-page";
+import { WHATSAPP, FACEBOOK } from '../data/contact';
 
 
 const channels = [

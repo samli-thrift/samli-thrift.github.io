@@ -127,6 +127,9 @@ $pad-sm: 60px var(--sp);
 
 .home_hero {
   @include page-hero;
+  #hero-title {
+    text-transform: uppercase;
+  }
 }
 
 .shopby {
@@ -146,6 +149,7 @@ $pad-sm: 60px var(--sp);
   h2 {
     // @include h2;
     font-size: clamp(2rem, 5dvw, 2.5rem);
+    text-transform: uppercase;
   }
 
   .categories {
@@ -203,6 +207,7 @@ $pad-sm: 60px var(--sp);
   h2 {
     // @include h2;
     font-size: clamp(2rem, 5dvw, 2.5rem);
+    text-transform: uppercase;
   }
 
   .products-grid {

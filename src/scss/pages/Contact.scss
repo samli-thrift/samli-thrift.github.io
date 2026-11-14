@@ -121,6 +121,9 @@
 
 .how {
     @include df(normal, normal, column, 24px);
+    h2 {
+      text-align: center;
+    }
 
     ol {
       list-style: none;

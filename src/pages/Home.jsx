@@ -97,6 +97,7 @@ function Home() {
     <section className="shopby" aria-labelledby="shopby-title">
       <div className="container">
         <h2 id="shopby-title"><span className="special">Shop</span> by Category</h2>
+        <p>Explore our store for what fits your style.</p>
         <ul className="categories">
           {categories.map(({ link, linkText }) => (
             <li key={linkText}>

@@ -274,6 +274,7 @@
 
 @mixin h2($c: var(--text), $bg:transparent, $shadow: var(--acc-300)) {
   font-size: clamp(2rem, 5dvw, 2.5rem);
+  text-transform: uppercase;
   @include dash;
 }
 

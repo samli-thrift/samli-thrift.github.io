@@ -29,7 +29,7 @@ function About() {
             </h1>
             <p>
               SamLi Thrift Collections is a Nigerian thrift store built on honest
-              grading and fair prices.<br/>Are you a student managing your funds, a worker upgrading your wardrobe or a retailer looking for stick to resell? Don't worry - we got you!
+              grading and fair prices.<br/>Are you a student managing your funds, a worker upgrading your wardrobe or a retailer looking for stock to resell? Don't worry - <b>we got you!</b>
             </p>
           </div>
         </div>
