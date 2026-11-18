@@ -1,13 +1,21 @@
-import { NavLink } from 'react-router-dom';
 import HeroImg from '../assets/images/kids.jpg';
+import OwnerImg from '../assets/images/owner.jpg';
+
+import { NavLink } from 'react-router-dom';
 import FaqDropdown from '../components/FaqDropdown';
 
 import '../scss/pages/Home.scss';
 import ProductCard from '../components/ProductCard';
-import { useContext } from 'react';
+import Loader from '../components/Loader'; // NEW: your existing Loader for loading states
+import { useContext, useMemo, useState } from 'react'; // NEW: useMemo, useState
 import { PageContext } from '../context/PageContext.jsx';
 
-import { products } from "../data/products";
+// FIX: removed `import { products } from "../data/products"` (static data).
+// NEW: use the same Supabase-backed context the Shop page uses, so the whole
+// site makes ONE request and Home and Shop can never disagree.
+import { useProducts } from '../context/ProductsContext';
+// NEW: shared helpers (see lib/facets.js)
+import { buildFacets, prettify } from '../lib/facets';
 
 import { ShieldCheck, Tag, Search, BadgeCheck, Truck } from "lucide-react";
 
@@ -19,14 +27,8 @@ const reasons = [
   { icon: Truck, title: "Nationwide delivery", text: "Waybill delivery to all 36 states, usually in under 4 days." },
 ];
 
-// TODO: give each category its own query (e.g. ?category=boys) so the links don't all land on the same page
-const categories = [
-  { link: "/shop?category=men", linkText: "Men's clothes" },
-  { link: "/shop?category=women", linkText: "Women's clothes" },
-  { link: "/shop?category=children", linkText: "Children's clothes" },
-  { link: "/shop?category=boys", linkText: "Boys" },
-  { link: "/shop?category=girls", linkText: "Girls" },
-];
+// FIX: removed the hardcoded `categories` array and its TODO. Shop By tiles are
+// now built from the real category/style values on your products.
 
 const FEATURED_COUNT = 6;
 
@@ -74,6 +76,26 @@ const faqs = [
 function Home() {
   const { theme } = useContext(PageContext);
 
+  // NEW: data comes from context (loading + error are handled per section below)
+  const { products, loading, error } = useProducts();
+  const [shopBy, setShopBy] = useState('category'); // 'category' | 'style'
+
+  // NEW: only show items that can still be bought
+  const inStock = useMemo(() => products.filter((p) => !p.soldOut), [products]);
+
+  // NEW: context already sorts newest-first, so Featured = 6 newest in-stock items
+  const featured = useMemo(() => inStock.slice(0, FEATURED_COUNT), [inStock]);
+
+  // NEW: real categories and styles from the database, with counts + cover image
+  const facets = useMemo(
+    () => ({
+      category: buildFacets(inStock, 'category'),
+      style: buildFacets(inStock, 'style'),
+    }),
+    [inStock]
+  );
+  const shopByItems = facets[shopBy];
+
   return <main className="Home home-page">
     <section className="home_hero hero" aria-labelledby="hero-title">
       <div className="container">
@@ -96,32 +118,72 @@ function Home() {
 
     <section className="shopby" aria-labelledby="shopby-title">
       <div className="container">
-        <h2 id="shopby-title"><span className="special">Shop</span> by Category</h2>
+        <h2 id="shopby-title"><span className="special">Shop</span> by {prettify(shopBy)}</h2>
         <p>Explore our store for what fits your style.</p>
-        <ul className="categories">
-          {categories.map(({ link, linkText }) => (
-            <li key={linkText}>
-              <NavLink to={link} className="category">
-                <span className="img"><img src={HeroImg} alt="" loading="lazy" /></span>
-                <span className="label">
-                  {linkText}
-                  <i className="fa fa-chevron-right" aria-hidden="true"></i>
-                </span>
-              </NavLink>
-            </li>
+
+        {/* NEW: toggle between browsing by category and by style */}
+        <div className="shopby-tabs" role="group" aria-label="Browse by">
+          {['category', 'style'].map((key) => (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={shopBy === key}
+              onClick={() => setShopBy(key)}
+            >
+              {prettify(key)}
+            </button>
           ))}
-        </ul>
+        </div>
+
+        {loading ? (
+          <Loader label="Loading categories" />
+        ) : error ? (
+          <p className="section-note">Couldn't load this right now. Please refresh.</p>
+        ) : shopByItems.length === 0 ? (
+          <p className="section-note">New stock is on the way.</p>
+        ) : (
+          // key={shopBy} resets the carousel scroll position when switching tabs
+          <ul className="categories" key={shopBy}>
+            {shopByItems.map(({ value, label, count, image }) => (
+              <li key={value}>
+                {/* FIX: every tile now links to its own real filter, e.g. /shop?category=men
+                    or /shop?style=punk. Values are lowercase so Shop matches them. */}
+                <NavLink to={`/shop?${shopBy}=${encodeURIComponent(value)}`} className="category">
+                  {/* NEW: cover image comes from a real product in that group */}
+                  <span className="img"><img src={image || HeroImg} alt="" loading="lazy" /></span>
+                  <span className="label">
+                    <span>
+                      {label}
+                      <small>{count} {count === 1 ? 'item' : 'items'}</small>
+                    </span>
+                    <i className="fa fa-chevron-right" aria-hidden="true"></i>
+                  </span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
 
     <section className="featured" aria-labelledby="featured-title">
       <div className="container">
         <h2 id="featured-title">Featured <span className="special">products</span></h2>
-        <ul className="products-grid">
-          {products.slice(0, FEATURED_COUNT).map((each) => (
-            <li key={each.id ?? each.name}><ProductCard product={each} /></li>
-          ))}
-        </ul>
+
+        {/* NEW: loading / error / empty states around the real data */}
+        {loading ? (
+          <Loader label="Loading products" />
+        ) : error ? (
+          <p className="section-note">Couldn't load products right now. Please refresh.</p>
+        ) : featured.length === 0 ? (
+          <p className="section-note">New stock is on the way. Check back soon.</p>
+        ) : (
+          <ul className="products-grid">
+            {featured.map((each) => (
+              <li key={each.id}><ProductCard product={each} /></li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
 
@@ -144,7 +206,7 @@ function Home() {
       <div className="container">
         <div className="meetowner-content">
           <div className="img">
-            <img src={HeroImg} alt="Ogun Lilian, owner of SamLi Thrift" loading="lazy" />
+            <img src={OwnerImg} alt="Ogun Lilian, owner of SamLi Thrift" loading="lazy" />
           </div>
           <div className="text">
             <h2 id="owner-title">Meet the owner</h2>

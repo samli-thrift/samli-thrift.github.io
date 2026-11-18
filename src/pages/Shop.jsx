@@ -7,35 +7,15 @@ import "../scss/components/Searchbar.scss"; // SearchBar.jsx used to import this
 import { DropdownField } from "../components/InputField.jsx";
 import ProductGrid from "../components/ProductGrid.jsx";
 import { useProducts } from "../context/ProductsContext";
+import Loader from "../components/Loader";
+import { buildOptions, hasValue, normType } from "../lib/facets"; // NEW: shared helpers
 
-const options = {
-  category: [
-    { value: "all", label: "All" },
-    { value: "men", label: "Men's" },
-    { value: "women", label: "Women" },
-    { value: "kids", label: "Kid's" },
-    { value: "unisex", label: "Unisex" },
-    { value: "babies", label: "Babies'" },
-    { value: "girl", label: "Girl's" },
-    { value: "underwear", label: "Underwear" },
-    { value: "swimwear", label: "Swimwear" },
-    { value: "night-wear", label: "Nightwear" },
-  ],
-  style: [
-    { value: "all", label: "All" },
-    { value: "hot", label: "Hot" },
-    { value: "sexy", label: "Sexy" },
-    { value: "punk", label: "Punk" },
-    { value: "trending", label: "Trending" },
-  ],
-  environment: [
-    { value: "all", label: "All" },
-    { value: "everywhere", label: "Everywhere" },
-    { value: "work", label: "Work" },
-    { value: "school", label: "School" },
-    { value: "casual", label: "Casual" },
-  ],
-};
+// NEW: how many items "New Arrivals" (?sort=new) shows
+const NEW_ARRIVALS_COUNT = 20;
+
+// FIX: removed the hardcoded `options` object. It drifted from the database
+// (e.g. Shop had "girl"/"kids" while Home linked to "girls"/"boys"/"children").
+// Options are now built from the real products inside the component, below.
 
 // "environment" -> "Environment"
 const toLabel = (key) => key.charAt(0).toUpperCase() + key.slice(1);
@@ -44,8 +24,19 @@ function Shop() {
   const [params, setParams] = useSearchParams();
   const searchId = useId();
   const searchRef = useRef(null);
-  
+
   const { products, loading, error } = useProducts();
+
+  // NEW: dropdown options come from the real values on your products.
+  // Pretty names (Men's, Kid's...) live in LABELS inside lib/facets.js.
+  const options = useMemo(
+    () => ({
+      category: buildOptions(products, "category"),
+      style: buildOptions(products, "style"),
+      environment: buildOptions(products, "environment"),
+    }),
+    [products]
+  );
 
   // { category: "all", style: "all", environment: "all" } built from the options keys
   const values = Object.fromEntries(
@@ -75,19 +66,45 @@ function Shop() {
   const results = useMemo(() => {
     const q = (params.get("q") ?? "").trim().toLowerCase();
     const get = (key) => params.get(key) ?? "all";
-    return products
+    const env = get("environment").toLowerCase();
+
+    // NEW: extra URL filters used by the Navbar's Featured links
+    const type = params.get("type");              // ?type=slot | bale | single
+    const max = Number(params.get("max")) || 0;   // ?max=5000 -> price <= 5000
+
+    const list = products
       .filter(
         (p) =>
-          (get("category") === "all" || p.category.includes(get("category"))) &&
-          (get("style") === "all" || p.style.includes(get("style"))) &&
-          (get("environment") === "all" ||
-            p.environment === get("environment") ||
-            p.environment === "everywhere") &&
-          (!q || p.name.toLowerCase().includes(q))
+          // FIX: hasValue() compares case-insensitively, so "?category=men"
+          // matches "Men" in the DB. The old `.includes()` was an exact match.
+          (get("category") === "all" || hasValue(p.category, get("category"))) &&
+          (get("style") === "all" || hasValue(p.style, get("style"))) &&
+          // FIX: environment is compared case-insensitively too (and is null-safe)
+          (env === "all" ||
+            p.environment?.toLowerCase() === env ||
+            p.environment?.toLowerCase() === "everywhere") &&
+          (!q || p.name.toLowerCase().includes(q)) &&
+          // NEW: type filter ("bale" and "bales" both work)
+          (!type || normType(p.type) === normType(type)) &&
+          // NEW: price ceiling
+          (!max || p.price <= max)
       )
       // available items first, sold-out last
       .sort((a, b) => Number(!!a.soldOut) - Number(!!b.soldOut));
+
+    // NEW: ?sort=new -> the newest in-stock items (the API already returns
+    // newest first, and the sort above is stable, so slicing is enough)
+    return params.get("sort") === "new"
+      ? list.filter((p) => !p.soldOut).slice(0, NEW_ARRIVALS_COUNT)
+      : list;
   }, [params, products]);
+
+  // NEW: plain-text summary of the extra filters, since they have no dropdown
+  const extras = [
+    params.get("type") && `${params.get("type").replace(/s?$/, "s")} only`,
+    Number(params.get("max")) > 0 && `Under ₦${Number(params.get("max")).toLocaleString("en-NG")}`,
+    params.get("sort") === "new" && "New arrivals",
+  ].filter(Boolean);
 
   return (
     <main className="Shop shop-page">
@@ -169,7 +186,7 @@ function Shop() {
       <section className="products" id="products" aria-label="Products">
         <div className="container">
           {loading ? (
-            <p className="results-count">Loading pieces…</p>
+            <Loader label="Loading pieces" />
           ) : error ? (
             <div className="empty">
               <p>Couldn't load the store right now.</p>
@@ -179,8 +196,9 @@ function Shop() {
             <>
               <p className="results-count" aria-live="polite">
                 {results.length} {results.length === 1 ? "piece" : "pieces"} found
+                {extras.length > 0 && ` · ${extras.join(" · ")}`}
               </p>
-    
+
               {results.length ? (
                 <ProductGrid products={results} />
               ) : (

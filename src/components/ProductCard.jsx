@@ -1,7 +1,6 @@
-
-
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { Layers } from "lucide-react"; // NEW: icon for the slot badge
 import { CartContext } from "../context/CartContext";
 import "../scss/components/ProductCard.scss";
 
@@ -17,21 +16,38 @@ function ProductCard({ product }) {
     condition = "Good",
     status,
     soldOut = false,
+    type,        // NEW: "slot" | "bale" | "single" (comes through productsApi.toProduct)
+    piecesCount, // NEW: FIX: camelCase, because toProduct renames pieces_count -> piecesCount
   } = product;
+
+  // NEW: only slots get a badge. startsWith also tolerates "Slot" / "slots".
+  const isSlot = type?.toLowerCase().startsWith("slot");
 
   const { carts, addToCart } = useContext(CartContext);
   const inCart = carts.some((item) => item.id === id);
 
+  // NEW: type + piecesCount travel with the cart item so the cart page can show them too
   const handleAddToCart = () =>
-  addToCart({ id, name, price, image, status, size, condition });
+    addToCart({ id, name, price, image, status, size, condition, type, piecesCount });
 
   return (
     <article className={`product-card ${soldOut ? "is-sold-out" : ""}`}>
       <Link to={`/product-details?id=${id}`} className="product-card-img">
-        <img src={image || "/placeholder.png"} alt={name} loading="lazy" />        {soldOut ? (
+        <img src={image || "/placeholder.png"} alt={name} loading="lazy" />
+        {/* FIX: this {soldOut ? ...} used to sit on the same line as <img>; moved to its own line */}
+        {soldOut ? (
           <span className="status sold">Sold out</span>
         ) : (
           status && <span className="status">{status}</span>
+        )}
+
+        {/* NEW: slot badge, bottom-left of the image, e.g. "SLOT | 12 PCS" */}
+        {isSlot && (
+          <span className="slot-tag">
+            <Layers size={12} aria-hidden="true" />
+            Slot
+            {piecesCount ? <b>{piecesCount} pcs</b> : null}
+          </span>
         )}
       </Link>
 
@@ -73,5 +89,3 @@ function ProductCard({ product }) {
 }
 
 export default ProductCard;
-
-

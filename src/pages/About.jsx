@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Shirt, ShieldCheck, MessageCircle, Truck } from "lucide-react";
-import OwnerImg from "../assets/images/kids.jpg";
+import OwnerImg from "../assets/images/owner.jpg";
 import "../scss/pages/About.scss";
 
 const stats = [

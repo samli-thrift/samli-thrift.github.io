@@ -6,6 +6,7 @@ import { CartContext } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
 import { WHATSAPP } from "../data/contact.js";
 import { useProducts } from "../context/ProductsContext";
+import Loader from "../components/Loader";
 
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString("en-NG")}`;
@@ -43,7 +44,7 @@ export default function ProductDetails() {
   if (loading) {
     return (
       <main className="ProductDetails">
-        <section className="pd_main"><div className="container"><p>Loading…</p></div></section>
+        <section className="pd_main"><div className="container"><Loader label="Loading piece" /></div></section>
       </main>
     );
   }

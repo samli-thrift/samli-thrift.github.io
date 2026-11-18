@@ -125,6 +125,14 @@ $pad-sm: 60px var(--sp);
   }
 }
 
+// NEW: message shown when a section is loading-failed or has no products yet
+.section-note {
+  margin: 0;
+  padding: 30px 0;
+  text-align: center;
+  color: var(--medium);
+}
+
 .home_hero {
   @include page-hero;
   #hero-title {
@@ -150,6 +158,19 @@ $pad-sm: 60px var(--sp);
     // @include h2;
     font-size: clamp(2rem, 5dvw, 2.5rem);
     text-transform: uppercase;
+  }
+
+  // NEW: Category / Style toggle
+  .shopby-tabs {
+    @include df(normal, center, row, 8px);
+
+    button {
+      @include btn(var(--text), transparent, var(--text), var(--acc-100), var(--text));
+      & { padding: 8px 16px; }
+
+      // Declared after the mixin's :hover so the active tab stays yellow on hover
+      &[aria-pressed="true"] { background: var(--acc); }
+    }
   }
 
   .categories {
@@ -188,6 +209,15 @@ $pad-sm: 60px var(--sp);
       padding: 14px 16px;
       font: 700 .85rem 'jetbrains-mono';
       @include df(space-between, center, row, 8px);
+
+      // NEW: "12 items" under the name
+      small {
+        display: block;
+        margin-top: 2px;
+        font-weight: 400;
+        font-size: .72rem;
+        color: var(--medium);
+      }
     }
   }
 }
@@ -378,7 +408,9 @@ $pad-sm: 60px var(--sp);
 
   .reviews-grid {
     @include carousel(--reviews-carousel, 300px);
-    @include df(center, center, row, 22px);
+    @media (min-width: $tab) {
+      @include df(center, center, row, 22px);
+    }
   }
 
   .review-card {

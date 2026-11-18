@@ -1,48 +1,26 @@
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, useMemo } from "react"; // NEW: useMemo
 
 import SearchBar from "./SearchBar";
 import { CartContext } from "../context/CartContext";
 import { PageContext } from "../context/PageContext";
+import { useProducts } from "../context/ProductsContext"; // NEW: same data Home and Shop use
+import { buildFacets, normType } from "../lib/facets";     // NEW: shared helpers
 
 import { WHATSAPP } from "../data/contact";
 
 import "../scss/components/Navbar.scss";
 
-// Placeholder links: swap the query values for your real categories
-const SHOP_MENU = [
-  {
-    title: "Shop by Gender",
-    links: [
-      { label: "Men", to: "/shop?category=men" },
-      { label: "Women", to: "/shop?category=women" },
-      { label: "Kids", to: "/shop?category=kids" },
-      { label: "Unisex", to: "/shop?category=unisex" },
-    ],
-  },
-  {
-    title: "Shop by Category",
-    links: [
-      { label: "Tops & Shirts", to: "/shop?category=tops" },
-      { label: "Jeans & Trousers", to: "/shop?category=bottoms" },
-      { label: "Dresses", to: "/shop?category=dresses" },
-      { label: "Jackets & Coats", to: "/shop?category=jackets" },
-      { label: "Hot and Trending", to: "/shop?style=hot" },
-      { label: "Work Wear", to: "/shop?environment=work" },
-    ],
-  },
-  {
-    title: "Featured",
-    links: [
-      { label: "New Arrivals", to: "/shop?sort=new" },
-      { label: "Slots", to: "/shop?type=slot" },
-      { label: "Under ₦5,000", to: "/shop?max=5000" },
-      { label: "Bundles & Bales", to: "/shop?type=bales" },
-    ],
-  },
-];
+// FIX: removed the hardcoded SHOP_MENU (tops, bottoms, dresses, jackets...).
+// Those categories don't exist in your database, so those links led to empty
+// pages. The menu is now built from real products inside Navbar() below.
 
-const WHATSAPP_LINK = "https://wa.me/2348038849000";
+// FIX: removed `WHATSAPP_LINK`. It was never used (the button already builds its
+// link from WHATSAPP in ../data/contact) and it hardcoded a second phone number.
+
+const MENU_CATEGORY_LIMIT = 6; // how many categories to list in the dropdown
+const MENU_STYLE_LIMIT = 5;    // how many styles to list
+const BUDGET_LIMIT = 5000;     // the "Under ₦5,000" link
 
 function Chevron() {
   return (
@@ -87,9 +65,46 @@ function Navbar() {
   const { updateTheme } = useContext(PageContext);
   const { pathname, search } = useLocation();
 
+  // NEW: real products (Navbar must sit inside <ProductsProvider>, like Shop and Home do)
+  const { products } = useProducts();
+
   const [navOpen, setNavOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const shopRef = useRef(null);
+
+  // NEW: Shop dropdown built from what is actually for sale.
+  // Links use lowercase values, which Shop matches case-insensitively.
+  const shopMenu = useMemo(() => {
+    const inStock = products.filter((p) => !p.soldOut);
+    if (inStock.length === 0) return []; // still loading (or empty): show only "View all"
+
+    const toLinks = (key, limit) =>
+      buildFacets(inStock, key)
+        .slice(0, limit)
+        .map(({ value, label }) => ({
+          label,
+          to: `/shop?${key}=${encodeURIComponent(value)}`,
+        }));
+
+    const hasType = (t) => inStock.some((p) => normType(p.type) === t);
+
+    const featured = [
+      { label: "New Arrivals", to: "/shop?sort=new" },
+      // Only offered when such items exist, so they never lead to an empty page
+      hasType("slot") && { label: "Slots", to: "/shop?type=slot" },
+      hasType("bale") && { label: "Bales", to: "/shop?type=bale" }, // FIX: was type=bales
+      inStock.some((p) => p.price <= BUDGET_LIMIT) && {
+        label: `Under ₦${BUDGET_LIMIT.toLocaleString("en-NG")}`,
+        to: `/shop?max=${BUDGET_LIMIT}`,
+      },
+    ].filter(Boolean);
+
+    return [
+      { title: "Shop by Category", links: toLinks("category", MENU_CATEGORY_LIMIT) },
+      { title: "Shop by Style", links: toLinks("style", MENU_STYLE_LIMIT) },
+      { title: "Featured", links: featured },
+    ].filter((group) => group.links.length > 0); // hide empty groups
+  }, [products]);
 
   // Close everything when the route changes
   useEffect(() => {
@@ -173,7 +188,8 @@ function Navbar() {
 
               <div className="dropdown" id="shop-menu">
                 <div className="panel">
-                  {SHOP_MENU.map((group) => (
+                  {/* CHANGED: was SHOP_MENU.map(...), now the data-driven shopMenu */}
+                  {shopMenu.map((group) => (
                     <div className="group" key={group.title}>
                       <h3>{group.title}</h3>
                       <ul>

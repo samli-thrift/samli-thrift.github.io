@@ -1,11 +1,19 @@
 
 
-import React from 'react'
+import "../scss/components/Loader.scss";
 
-function Loader() {
+function Loader({ fullPage = false, label = "Loading" }) {
   return (
-    <div>Loader</div>
-  )
+    <div
+      className={`Loader${fullPage ? " Loader--full-page" : ""}`}
+      role="status"
+      aria-live="polite"
+      aria-label={label}
+    >
+      <span className="Loader__spinner" aria-hidden="true" />
+      <span className="Loader__label">{label}</span>
+    </div>
+  );
 }
 
-export default Loader
+export default Loader;
