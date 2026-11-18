@@ -46,7 +46,7 @@ function About() {
               I started this business to provide quality okirika at affordable prices. I personally inspect every bale and tell customers the true condition. What you see is what you get.
             </p>
             <p>
-              Here at Samli, we believe that everyone deserves to look good, feel good and still have some change in their pocket. Are you a student managing your funds, a worker upgrading your wardrobe or a retailer looking for stick to resell? Don't worry - we got you!
+              Here at Samli, we believe that everyone deserves to look good, feel good and still have some change in their pocket. Are you a student managing your funds, a worker upgrading your wardrobe or a retailer looking for stock to resell? Don't worry - we got you!
             </p>
             <p>
               Today, I supply quality thrift clothing to resellers and individuals across Nigeria. My goal is simple: sell good clothes, earn trust, and build long-term relationships.
