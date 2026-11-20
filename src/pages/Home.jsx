@@ -30,7 +30,7 @@ const reasons = [
 const heroStats = [
   { value: '4+', label: 'Years trading' },
   { value: '250+', label: 'Happy sales' },
-  { value: '36', label: 'States delivered' },
+  { value: '12+', label: 'States delivered to' },
 ];
 
 const FEATURED_COUNT = 6;

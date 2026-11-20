@@ -6,7 +6,7 @@ import "../scss/pages/About.scss";
 const stats = [
   { value: "4+", label: "Years trading" },
   { value: "250+", label: "Online sales" },
-  { value: "12", label: "States delivered to" },
+  { value: "12+", label: "States delivered to" },
   { value: "Many", label: "Returning customers" },
 ];
 
