@@ -6,18 +6,18 @@ import FaqDropdown from '../components/FaqDropdown';
 
 import '../scss/pages/Home.scss';
 import ProductCard from '../components/ProductCard';
-import Loader from '../components/Loader'; // NEW: your existing Loader for loading states
-import { useContext, useMemo, useState } from 'react'; // NEW: useMemo, useState
+import Loader from '../components/Loader';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { PageContext } from '../context/PageContext.jsx';
 
-// FIX: removed `import { products } from "../data/products"` (static data).
-// NEW: use the same Supabase-backed context the Shop page uses, so the whole
-// site makes ONE request and Home and Shop can never disagree.
+// Same Supabase-backed context the Shop page uses, so Home and Shop never disagree.
 import { useProducts } from '../context/ProductsContext';
-// NEW: shared helpers (see lib/facets.js)
 import { buildFacets, prettify } from '../lib/facets';
 
-import { ShieldCheck, Tag, Search, BadgeCheck, Truck } from "lucide-react";
+import {
+  ShieldCheck, Tag, Search, BadgeCheck, Truck,
+  ArrowRight, ChevronLeft, ChevronRight, Sparkles,
+} from "lucide-react";
 
 const reasons = [
   { icon: ShieldCheck, title: "Honest grading", text: "Every item is checked for stains, wear and flaws. We grade it plainly and photograph any defects." },
@@ -27,8 +27,11 @@ const reasons = [
   { icon: Truck, title: "Nationwide delivery", text: "Waybill delivery to all 36 states, usually in under 4 days." },
 ];
 
-// FIX: removed the hardcoded `categories` array and its TODO. Shop By tiles are
-// now built from the real category/style values on your products.
+const heroStats = [
+  { value: '4+', label: 'Years trading' },
+  { value: '250+', label: 'Happy sales' },
+  { value: '36', label: 'States delivered' },
+];
 
 const FEATURED_COUNT = 6;
 
@@ -76,17 +79,16 @@ const faqs = [
 function Home() {
   const { theme } = useContext(PageContext);
 
-  // NEW: data comes from context (loading + error are handled per section below)
   const { products, loading, error } = useProducts();
   const [shopBy, setShopBy] = useState('category'); // 'category' | 'style'
 
-  // NEW: only show items that can still be bought
+  // Only show items that can still be bought
   const inStock = useMemo(() => products.filter((p) => !p.soldOut), [products]);
 
-  // NEW: context already sorts newest-first, so Featured = 6 newest in-stock items
+  // Context sorts newest-first, so Featured = 6 newest in-stock items
   const featured = useMemo(() => inStock.slice(0, FEATURED_COUNT), [inStock]);
 
-  // NEW: real categories and styles from the database, with counts + cover image
+  // Real categories and styles from the database, with counts + cover image
   const facets = useMemo(
     () => ({
       category: buildFacets(inStock, 'category'),
@@ -96,22 +98,91 @@ function Home() {
   );
   const shopByItems = facets[shopBy];
 
+  // Hero slider: your own photo first, then real category covers from the database
+  const heroSlides = useMemo(() => [
+    { src: HeroImg, label: 'Kids thrift', to: '/shop' },
+    ...facets.category
+      .filter((f) => f.image)
+      .slice(0, 3)
+      .map((f) => ({
+        src: f.image,
+        label: f.label,
+        to: `/shop?category=${encodeURIComponent(f.value)}`,
+      })),
+  ], [facets.category]);
+
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const total = heroSlides.length;
+  const current = heroSlides[slide % total];
+
+  const go = (dir) => setSlide((i) => (i + dir + total) % total);
+
+  // Autoplay every 5s; stops on hover/focus, with one slide, or if the user prefers reduced motion
+  useEffect(() => {
+    if (paused || total < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(() => setSlide((i) => (i + 1) % total), 5000);
+    return () => clearInterval(id);
+  }, [paused, total]);
+
   return <main className="Home home-page">
     <section className="home_hero hero" aria-labelledby="hero-title">
       <div className="container">
-        <div className="hero_img">
-          <img src={HeroImg} alt="Children wearing thrifted clothes" />
+        <div
+          className="hero_img"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
+          <div className="hero-slide" aria-roledescription="carousel" aria-label="Featured collections">
+            <img
+              key={current.src}
+              src={current.src}
+              alt={`${current.label} at SamLi Thrift`}
+              onError={(e) => { e.currentTarget.src = HeroImg; }}
+            />
+          </div>
+
+          <NavLink to={current.to} className="hero-image-note">
+            {current.label} <ArrowRight size={14} aria-hidden="true" />
+          </NavLink>
+
+          <div className="hero-badge" aria-hidden="true">
+            <strong>250+</strong>
+            <span>happy online sales</span>
+          </div>
+
+          {total > 1 && (
+            <div className="hero-slider-controls">
+              <button type="button" onClick={() => go(-1)} aria-label="Previous slide"><ChevronLeft size={18} /></button>
+              <span className="hero-slide-count" aria-live="polite">
+                {String((slide % total) + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+              </span>
+              <button type="button" onClick={() => go(1)} aria-label="Next slide"><ChevronRight size={18} /></button>
+            </div>
+          )}
         </div>
+
         <div className="hero_content">
-          <span className="eyebrow">Welcome to SamLi Thrift Collections</span>
+          <span className="eyebrow">
+            <Sparkles size={14} aria-hidden="true" />
+            <span className="hide-sm">Welcome to </span>SamLi Thrift Collections
+          </span>
           <h1 className="slogan" id="hero-title">
             Where <span className="special">Quality</span> meets <span className="special">Affordability</span>
           </h1>
-          <p>Your go-to destination for quality thrift clothing in Nigeria. Explore our wide range of affordable fashion.</p>
+          <p>Your go-to destination for quality thrift clothing in Nigeria. Hand-picked, honestly graded pieces delivered to all 36 states.</p>
           <div className="cta">
-            <NavLink to="/shop">Shop now</NavLink>
-            <NavLink to="/contact">Contact us</NavLink>
+            <NavLink to="/shop" className="primary">Shop now <ArrowRight size={16} aria-hidden="true" /></NavLink>
+            <NavLink to="/contact" className="ghost">Contact us</NavLink>
           </div>
+          <ul className="hero-stats">
+            {heroStats.map(({ value, label }) => (
+              <li key={label}><strong>{value}</strong><span>{label}</span></li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
@@ -121,7 +192,7 @@ function Home() {
         <h2 id="shopby-title"><span className="special">Shop</span> by {prettify(shopBy)}</h2>
         <p>Explore our store for what fits your style.</p>
 
-        {/* NEW: toggle between browsing by category and by style */}
+        {/* Toggle between browsing by category and by style */}
         <div className="shopby-tabs" role="group" aria-label="Browse by">
           {['category', 'style'].map((key) => (
             <button
@@ -146,10 +217,7 @@ function Home() {
           <ul className="categories" key={shopBy}>
             {shopByItems.map(({ value, label, count, image }) => (
               <li key={value}>
-                {/* FIX: every tile now links to its own real filter, e.g. /shop?category=men
-                    or /shop?style=punk. Values are lowercase so Shop matches them. */}
                 <NavLink to={`/shop?${shopBy}=${encodeURIComponent(value)}`} className="category">
-                  {/* NEW: cover image comes from a real product in that group */}
                   <span className="img"><img src={image || HeroImg} alt="" loading="lazy" /></span>
                   <span className="label">
                     <span>
@@ -170,7 +238,6 @@ function Home() {
       <div className="container">
         <h2 id="featured-title">Featured <span className="special">products</span></h2>
 
-        {/* NEW: loading / error / empty states around the real data */}
         {loading ? (
           <Loader label="Loading products" />
         ) : error ? (

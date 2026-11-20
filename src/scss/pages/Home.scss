@@ -125,7 +125,7 @@ $pad-sm: 60px var(--sp);
   }
 }
 
-// NEW: message shown when a section is loading-failed or has no products yet
+// Message shown when a section failed to load or has no products yet
 .section-note {
   margin: 0;
   padding: 30px 0;
@@ -135,8 +135,340 @@ $pad-sm: 60px var(--sp);
 
 .home_hero {
   @include page-hero;
+
+  padding: clamp(36px, 6vw, 76px) var(--sp);
+  padding-top: 120px;
+  background:
+    radial-gradient(ellipse at 12% 18%, var(--acc-200), transparent 40%),
+    radial-gradient(ellipse at 95% 90%, var(--acc-100), transparent 45%),
+    var(--bg);
+
+  .container {
+    width: 100%;
+    max-width: 1240px;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(36px, 7vw, 100px);
+  }
+
+  .hero_img {
+    position: relative;
+    min-width: 0;
+    padding: 14px 0 0 14px;
+    aspect-ratio: 5 / 4;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0 14px 14px 0;
+      border: 1px solid var(--acc);
+      pointer-events: none;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 14px 0 0 14px;
+      overflow: hidden;
+      background: var(--cream);
+      box-shadow: 12px 12px 0 var(--acc-300);
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+        object-fit: cover;
+        animation: hero-image-in .5s ease both;
+      }
+    }
+
+    .hero-image-note {
+      position: absolute;
+      left: 28px;
+      bottom: 28px;
+      padding: 10px 14px;
+      background: var(--bg);
+      color: var(--text);
+      text-decoration: none;
+      font: 700 .7rem 'jetbrains-mono';
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      @include df(center, center, row, 8px);
+      transition: background .2s, color .2s;
+
+      &:hover {
+        background: var(--acc);
+        color: var(--dark);
+      }
+    }
+
+    .hero-badge {
+      position: absolute;
+      top: 0;
+      right: -10px;
+      z-index: 2;
+      padding: 12px 16px;
+      background: var(--acc);
+      color: var(--dark);
+      border: 1px solid var(--dark);
+      border-radius: 14px;
+      transform: rotate(4deg);
+      box-shadow: 4px 4px 0 var(--acc-300);
+      @include df(normal, center, column);
+
+      strong {
+        font: 700 1.5rem 'cascadia-code';
+        line-height: 1;
+      }
+
+      span {
+        font: 700 .6rem 'jetbrains-mono';
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+    }
+
+    .hero-slider-controls {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .hero-slide-count {
+      padding: 0 8px;
+      font: 700 .72rem 'jetbrains-mono';
+      white-space: nowrap;
+    }
+
+    .hero-slider-controls button {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--acc-300);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: background .2s, color .2s;
+
+      &:hover {
+        background: var(--acc);
+        color: var(--dark);
+      }
+    }
+  }
+
+  .hero_content {
+    align-items: flex-start;
+    gap: 22px;
+
+    span.eyebrow {
+      margin: 0;
+      padding: 8px 16px 8px 14px;
+      border: 1px solid var(--acc-400);
+      border-radius: 999px;
+      background: var(--acc-100);
+      color: var(--text);
+      font-size: .7rem;
+      cursor: default;
+      @include df(center, center, row, 8px);
+
+      // swap the sparkle for a pulsing dot (hide the <svg>, or remove Sparkles from the JSX)
+      svg {
+        display: none;
+      }
+
+      &::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--acc);
+        box-shadow: 0 0 0 0 var(--acc-500);
+        animation: eyebrow-pulse 2s infinite;
+      }
+
+      &:hover {
+        background: var(--acc-100);
+        border-color: var(--acc-400);
+        color: var(--text);
+      }
+
+      @media (max-width: $mini-tab) {
+        font-size: .64rem;
+        padding: 7px 12px;
+
+        .hide-sm {
+          display: none;
+        }
+      }
+    }
+
+    h1.slogan {
+      margin: 0;
+      line-height: 1.04;
+      text-wrap: balance;
+    }
+
+    p {
+      max-width: 46ch;
+      margin: 0;
+      color: var(--medium);
+    }
+
+    .cta {
+      gap: 12px;
+
+      a.primary {
+        box-shadow: 4px 4px 0 var(--acc-300);
+
+        &:hover {
+          transform: translate(-1px, -1px);
+        }
+      }
+
+      a.ghost {
+        @include btn(var(--text), transparent);
+      }
+    }
+
+    .hero-stats {
+      list-style: none;
+      margin: 8px 0 0;
+      padding: 18px 0 0;
+      border-top: 1px solid var(--acc-300);
+      width: 100%;
+      @include df(normal, normal, row wrap, clamp(20px, 4vw, 44px));
+
+      li {
+        @include df(normal, normal, column, 2px);
+      }
+
+      strong {
+        font: 700 clamp(1.4rem, 3dvw, 1.9rem) 'cascadia-code';
+        color: var(--acc);
+      }
+
+      span {
+        font: 700 .68rem 'jetbrains-mono';
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--medium);
+      }
+    }
+  }
+
   #hero-title {
     text-transform: uppercase;
+  }
+
+  @media (max-width: $tab) {
+    .container {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .hero_content {
+      gap: 18px;
+
+      h1.slogan {
+        font-size: clamp(2.4rem, 6vw, 3.4rem);
+      }
+    }
+  }
+
+  @media (max-width: $mini-tab) {
+    padding: 42px var(--sp) 54px;
+    padding-top: 100px;
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 34px;
+    }
+
+    .hero_img {
+      width: 100%;
+      padding: 0;
+
+      // remove the yellow frame on mobile
+      &::before {
+        display: none;
+      }
+
+      .hero-slide {
+        inset: 0;
+        box-shadow: none;
+        border: 1px solid var(--acc);
+      }
+
+      .hero-image-note {
+        left: 18px;
+        bottom: 18px;
+        padding: 8px 10px;
+        font-size: .6rem;
+      }
+
+      .hero-badge {
+        top: 16px;
+        right: 6px;
+        padding: 8px 12px;
+
+        strong {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .hero_content {
+      padding: 0;
+      text-align: left;
+      align-items: flex-start;
+
+      .cta {
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
+@keyframes hero-image-in {
+  from {
+    opacity: .65;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes eyebrow-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--acc-500);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home_hero .eyebrow::before {
+    animation: none;
   }
 }
 
@@ -160,16 +492,21 @@ $pad-sm: 60px var(--sp);
     text-transform: uppercase;
   }
 
-  // NEW: Category / Style toggle
+  // Category / Style toggle
   .shopby-tabs {
     @include df(normal, center, row, 8px);
 
     button {
       @include btn(var(--text), transparent, var(--text), var(--acc-100), var(--text));
-      & { padding: 8px 16px; }
+
+      & {
+        padding: 8px 16px;
+      }
 
       // Declared after the mixin's :hover so the active tab stays yellow on hover
-      &[aria-pressed="true"] { background: var(--acc); }
+      &[aria-pressed="true"] {
+        background: var(--acc);
+      }
     }
   }
 
@@ -210,7 +547,7 @@ $pad-sm: 60px var(--sp);
       font: 700 .85rem 'jetbrains-mono';
       @include df(space-between, center, row, 8px);
 
-      // NEW: "12 items" under the name
+      // "12 items" under the name
       small {
         display: block;
         margin-top: 2px;
@@ -408,6 +745,7 @@ $pad-sm: 60px var(--sp);
 
   .reviews-grid {
     @include carousel(--reviews-carousel, 300px);
+
     @media (min-width: $tab) {
       @include df(center, center, row, 22px);
     }
@@ -501,6 +839,10 @@ $pad-sm: 60px var(--sp);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .home_hero .hero-slide img {
+    animation: none;
+  }
+
   .shopby .category {
     transition: none;
 
