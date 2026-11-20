@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import About from './pages/About'
 import Shop from './pages/Shop';
@@ -50,7 +50,7 @@ function AppContent() {
 }
 
 function App() {
-  return <HashRouter>
+  return <BrowserRouter basename="/">
     <ScrollToTop/>
 
     <PageContextProvider>
@@ -60,7 +60,7 @@ function App() {
         </CartContextProvider>
       </ProductsProvider>
     </PageContextProvider>
-  </HashRouter>;
+  </BrowserRouter>;
 }
 
 export default App;
