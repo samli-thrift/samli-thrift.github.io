@@ -115,14 +115,29 @@ function Shop() {
     params.get("sort") === "new" && "New arrivals",
   ].filter(Boolean);
 
+  const inStock = products.filter((p) => !p.soldOut).length;
+
+  const pickCategory = (value) => {
+    updateParam("category", value);
+    document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <main className="Shop shop-page">
       <section className="shop_hero hero">
         <div className="container">
           <div className="hero_img">
             <img src={HeroImg} alt="Thrift clothes on display" />
+            {!loading && !error && (
+              <span className="stock-badge">
+                <i className="dot" aria-hidden="true"></i>
+                <strong>{inStock}</strong> pieces in store
+              </span>
+            )}
           </div>
+
           <div className="hero_content">
+            <span className="eyebrow">New stock weekly</span>
             <h1 className="slogan">
               <span className="special">Explore</span> our{" "}
               <span className="special">Store</span>
@@ -131,6 +146,34 @@ function Shop() {
               Discover incredible pieces that match your style and fit your
               budget
             </p>
+
+            {options.category.length > 0 && (
+              <div className="quick" role="group" aria-label="Quick categories">
+                <button
+                  type="button"
+                  className={values.category === "all" ? "active" : ""}
+                  onClick={() => pickCategory("all")}
+                >
+                  All
+                </button>
+                {options.category
+                  .filter((o) => optValue(o) !== "all")
+                  .slice(0, 4)
+                  .map((o) => (
+                    <button
+                      key={optValue(o)}
+                      type="button"
+                      className={
+                        values.category === optValue(o) ? "active" : ""
+                      }
+                      onClick={() => pickCategory(optValue(o))}
+                    >
+                      {o.label ?? o}
+                    </button>
+                  ))}
+              </div>
+            )}
+
             <div className="cta">
               <a href="#products">Browse the store</a>
               <NavLink to="/contact">Contact Us</NavLink>

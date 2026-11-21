@@ -1,12 +1,15 @@
 import { useState, useEffect, useId } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import '../scss/components/Searchbar.scss';
 
 function SearchBar({ classNames = [] }) {
   const id = useId();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [params] = useSearchParams();
-  const urlQuery = params.get('search') ?? '';
+
+  // CHANGED: Shop reads "q", not "search". Only mirror it while on /shop.
+  const urlQuery = pathname === '/shop' ? params.get('q') ?? '' : '';
   const [value, setValue] = useState(urlQuery);
 
   // keep the box in sync with the URL (back/forward, links from elsewhere)
@@ -17,9 +20,17 @@ function SearchBar({ classNames = [] }) {
     const q = value.trim();
     navigate({
       pathname: '/shop',
-      search: q ? `?search=${encodeURIComponent(q)}` : '',
+      search: q ? `?q=${encodeURIComponent(q)}` : '', // CHANGED: search -> q
     });
     e.currentTarget.querySelector('input')?.blur(); // closes the mobile keyboard
+  }
+
+  // NEW: clearing on /shop also removes the filter, so results update at once
+  function handleClear() {
+    setValue('');
+    if (pathname === '/shop' && urlQuery) {
+      navigate({ pathname: '/shop', search: '' });
+    }
   }
 
   return (
@@ -44,7 +55,7 @@ function SearchBar({ classNames = [] }) {
           type="button"
           className="clear-btn"
           aria-label="Clear search"
-          onClick={() => setValue('')}
+          onClick={handleClear}
         >
           <i className="icon-close"></i>
         </button>

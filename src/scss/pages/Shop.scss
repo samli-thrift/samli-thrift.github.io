@@ -3,9 +3,63 @@
 
 .shop_hero {
   @include page-hero;
-  // & { padding-block: 60px; }
+
   .container {
     @media (min-width: $mini-tab) { flex-flow: row; }
+  }
+
+  .hero_img { position: relative; }
+
+  .stock-badge {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    background: var(--bg);
+    border: 1px solid var(--text);
+    border-radius: 22px;
+    padding: 8px 14px;
+    box-shadow: 4px 4px 0 var(--acc-300);
+    font: 700 .75rem 'jetbrains-mono';
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    @include df(normal, center, row, 8px);
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--acc);
+      border: 1px solid var(--text);
+    }
+
+    @media (max-width: $mini-tab) {
+      left: calc(var(--sp) + 12px);
+      bottom: 12px;
+    }
+  }
+
+  .quick {
+    @include df(normal, center, row wrap, 8px);
+    @media (max-width: $mini-tab) { justify-content: center; }
+
+    button {
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--text);
+      border-radius: 22px;
+      padding: 6px 14px;
+      font: 700 .72rem 'jetbrains-mono';
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: all .3s;
+
+      &:hover { background: var(--acc-200); }
+      &.active {
+        background: var(--acc);
+        color: var(--dark);
+      }
+    }
   }
 }
 
