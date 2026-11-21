@@ -154,7 +154,7 @@ function Home() {
             <span>happy online sales</span>
           </div>
 
-          {total > 1 && (
+          {/* {total > 1 && (
             <div className="hero-slider-controls">
               <button type="button" onClick={() => go(-1)} aria-label="Previous slide"><ChevronLeft size={18} /></button>
               <span className="hero-slide-count" aria-live="polite">
@@ -162,7 +162,7 @@ function Home() {
               </span>
               <button type="button" onClick={() => go(1)} aria-label="Next slide"><ChevronRight size={18} /></button>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="hero_content">

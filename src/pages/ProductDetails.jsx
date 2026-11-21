@@ -2,15 +2,29 @@ import "../scss/pages/ProductDetails.scss";
 
 import { useContext, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { CartContext } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
 import { WHATSAPP } from "../data/contact.js";
 import { useProducts } from "../context/ProductsContext";
 import Loader from "../components/Loader";
 
+const SITE_URL = "https://samlistores.com.ng";
+const SITE_NAME = "SamLi Thrift";
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString("en-NG")}`;
 const label = (c) => c.replace(/-/g, " ");
+
+// Make any image path an absolute URL (needed for og:image)
+const absUrl = (src) =>
+  !src
+    ? `${SITE_URL}/og-default.jpg`
+    : /^https?:\/\//.test(src)
+    ? src
+    : new URL(src, SITE_URL).href;
+
+const clip = (text, max = 155) =>
+  text.length > max ? text.slice(0, max - 1).trimEnd() + "…" : text;
 
 const GRADES = {
   new: "Brand new, with or without tags.",
@@ -27,6 +41,7 @@ export default function ProductDetails() {
 
   const { carts, addToCart } = useContext(CartContext);
   const [active, setActive] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   // New product: back to the top, first photo
   useEffect(() => {
@@ -34,17 +49,17 @@ export default function ProductDetails() {
     window.scrollTo({ top: 0 });
   }, [id]);
 
-  // Page title
-  useEffect(() => {
-    document.title = product
-      ? `${product.name} | SamLi Thrift`
-      : "Product not found | SamLi Thrift";
-  }, [product]);
-
   if (loading) {
     return (
       <main className="ProductDetails">
-        <section className="pd_main"><div className="container"><Loader label="Loading piece" /></div></section>
+        <Helmet>
+          <title>Loading… | {SITE_NAME}</title>
+        </Helmet>
+        <section className="pd_main">
+          <div className="container">
+            <Loader label="Loading piece" />
+          </div>
+        </section>
       </main>
     );
   }
@@ -52,10 +67,14 @@ export default function ProductDetails() {
   if (!product) {
     return (
       <main className="ProductDetails">
+        <Helmet>
+          <title>Product not found | {SITE_NAME}</title>
+          <meta name="robots" content="noindex" />
+        </Helmet>
         <section className="pd_main">
           <div className="container">
             <div className="pd_missing">
-              <i className="fa-solid fa-circle-question" aria-hidden="true" />
+              <i className="fa fa-question" aria-hidden="true" />
               <h1>We couldn't find that piece</h1>
               <p>It may have sold or the link may be wrong.</p>
               <Link to="/shop" className="btn_link">
@@ -94,6 +113,68 @@ export default function ProductDetails() {
     `Hello SamLi Thrift, I'm interested in "${name}" (${naira(price)}). Is it still available?`
   )}`;
 
+  // ---------- Share ----------
+  const shareUrl = `${SITE_URL}/product-details?id=${encodeURIComponent(product.id)}`;
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt("Copy this link", shareUrl);
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${name} | ${SITE_NAME}`,
+          text: `${name} · ${naira(price)}`,
+          url: shareUrl,
+        });
+      } catch (e) {
+        if (e.name !== "AbortError") copyLink();
+      }
+      return;
+    }
+    copyLink();
+  };
+
+  // ---------- SEO ----------
+  const seoTitle = `${name} | ${SITE_NAME}`;
+  const seoDescription = clip(
+    description?.trim() ||
+      `${name}${size ? `, size ${size}` : ""}, ${condition.toLowerCase()} condition thrift ${
+        mainCategory ? label(mainCategory) : "find"
+      } for ${naira(price)}. Delivery to all 36 states in Nigeria.`
+  );
+  const seoImage = absUrl(gallery[0]);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name,
+    image: gallery.map(absUrl),
+    description: seoDescription,
+    ...(mainCategory && { category: label(mainCategory) }),
+    itemCondition:
+      condition.toLowerCase() === "new"
+        ? "https://schema.org/NewCondition"
+        : "https://schema.org/UsedCondition",
+    offers: {
+      "@type": "Offer",
+      url: shareUrl,
+      priceCurrency: "NGN",
+      price: Number(price) || 0,
+      availability: soldOut
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock",
+    },
+  };
+
+  // ---------- Related ----------
   const available = products.filter(
     (p) => String(p.id) !== String(product.id) && !p.soldOut
   );
@@ -112,6 +193,29 @@ export default function ProductDetails() {
 
   return (
     <main className="ProductDetails">
+      <Helmet>
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <link rel="canonical" href={shareUrl} />
+
+        <meta property="og:type" content="product" />
+        <meta property="og:site_name" content={SITE_NAME} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:image" content={seoImage} />
+        <meta property="og:image:alt" content={name} />
+        <meta property="product:price:amount" content={String(Number(price) || 0)} />
+        <meta property="product:price:currency" content="NGN" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={seoImage} />
+
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+
       <nav className="pd_crumbs" aria-label="Breadcrumb">
         <div className="container">
           <Link to="/">Home</Link>
@@ -206,6 +310,19 @@ export default function ProductDetails() {
                 <i className="fa fa-whatsapp" aria-hidden="true" />
                 Ask about this piece
               </a>
+
+              <button
+                type="button"
+                className="btn_link ghost"
+                onClick={handleShare}
+                aria-live="polite"
+              >
+                <i
+                  className={`fa ${copied ? "fa-check" : "fa-share-alt"}`}
+                  aria-hidden="true"
+                />
+                {copied ? "Link copied" : "Share"}
+              </button>
             </div>
 
             <ul className="pd_assure">
