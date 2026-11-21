@@ -150,8 +150,6 @@ export default function ProductDetails() {
         mainCategory ? label(mainCategory) : "find"
       } for ${naira(price)}. Delivery to all 36 states in Nigeria.`
   );
-  const seoImage = absUrl(gallery[0]);
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -202,17 +200,13 @@ export default function ProductDetails() {
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:title" content={seoTitle} />
         <meta property="og:description" content={seoDescription} />
-        <meta property="og:url" content={shareUrl} />
-        <meta property="og:image" content={seoImage} />
-        <meta property="og:image:alt" content={name} />
+        <meta property="og:url" content={shareUrl} />        <meta property="og:image:alt" content={name} />
         <meta property="product:price:amount" content={String(Number(price) || 0)} />
         <meta property="product:price:currency" content="NGN" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={seoTitle} />
         <meta name="twitter:description" content={seoDescription} />
-        <meta name="twitter:image" content={seoImage} />
-
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 

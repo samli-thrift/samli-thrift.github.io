@@ -11,6 +11,8 @@ import { WHATSAPP } from "../data/contact";
 
 import "../scss/components/Navbar.scss";
 
+import PageSeo from "./PageSeo";
+
 // FIX: removed the hardcoded SHOP_MENU (tops, bottoms, dresses, jackets...).
 // Those categories don't exist in your database, so those links led to empty
 // pages. The menu is now built from real products inside Navbar() below.
@@ -149,6 +151,7 @@ function Navbar() {
 
   return (
     <header className="Navbar">
+      <PageSeo />
       <div className="topbar">
         Delivery to all 36 states · Order easily on WhatsApp
       </div>

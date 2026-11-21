@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://samli-thrift.github.io/sitemap.xml
+Sitemap: https://samlistores.com.ng/sitemap.xml
