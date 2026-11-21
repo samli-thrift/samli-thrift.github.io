@@ -386,7 +386,7 @@ $pad-sm: 60px var(--sp);
     }
   }
 
-  @media (max-width: $mini-tab) {
+  @media (max-width: $tab) {
     padding: 42px var(--sp) 54px;
     padding-top: 100px;
 

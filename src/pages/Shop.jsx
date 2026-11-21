@@ -39,8 +39,15 @@ function Shop() {
   );
 
   // { category: "all", style: "all", environment: "all" } built from the options keys
+  const optValue = (o) => (typeof o === "string" ? o : o.value);
+
   const values = Object.fromEntries(
-    Object.keys(options).map((key) => [key, params.get(key) ?? "all"])
+    Object.entries(options).map(([key, opts]) => {
+      const raw = params.get(key);
+      if (!raw) return [key, "all"];
+      const match = opts.find((o) => o.value === raw.toLowerCase());
+      return [key, match ? match.value : "all"];
+    })
   );
   const query = params.get("q") ?? "";
 
@@ -69,15 +76,16 @@ function Shop() {
     const env = get("environment").toLowerCase();
 
     // NEW: extra URL filters used by the Navbar's Featured links
-    const type = params.get("type");              // ?type=slot | bale | single
-    const max = Number(params.get("max")) || 0;   // ?max=5000 -> price <= 5000
+    const type = params.get("type"); // ?type=slot | bale | single
+    const max = Number(params.get("max")) || 0; // ?max=5000 -> price <= 5000
 
     const list = products
       .filter(
         (p) =>
           // FIX: hasValue() compares case-insensitively, so "?category=men"
           // matches "Men" in the DB. The old `.includes()` was an exact match.
-          (get("category") === "all" || hasValue(p.category, get("category"))) &&
+          (get("category") === "all" ||
+            hasValue(p.category, get("category"))) &&
           (get("style") === "all" || hasValue(p.style, get("style"))) &&
           // FIX: environment is compared case-insensitively too (and is null-safe)
           (env === "all" ||
@@ -102,7 +110,8 @@ function Shop() {
   // NEW: plain-text summary of the extra filters, since they have no dropdown
   const extras = [
     params.get("type") && `${params.get("type").replace(/s?$/, "s")} only`,
-    Number(params.get("max")) > 0 && `Under ₦${Number(params.get("max")).toLocaleString("en-NG")}`,
+    Number(params.get("max")) > 0 &&
+      `Under ₦${Number(params.get("max")).toLocaleString("en-NG")}`,
     params.get("sort") === "new" && "New arrivals",
   ].filter(Boolean);
 
@@ -115,9 +124,13 @@ function Shop() {
           </div>
           <div className="hero_content">
             <h1 className="slogan">
-              <span className="special">Explore</span> our <span className="special">Store</span>
+              <span className="special">Explore</span> our{" "}
+              <span className="special">Store</span>
             </h1>
-            <p>Discover incredible pieces that match your style and fit your budget</p>
+            <p>
+              Discover incredible pieces that match your style and fit your
+              budget
+            </p>
             <div className="cta">
               <a href="#products">Browse the store</a>
               <NavLink to="/contact">Contact Us</NavLink>
@@ -128,7 +141,11 @@ function Shop() {
 
       <section className="filter-header" aria-labelledby="filter-title">
         <div className="container">
-          <form role="search" className="filter-form" onSubmit={handleSearchSubmit}>
+          <form
+            role="search"
+            className="filter-form"
+            onSubmit={handleSearchSubmit}
+          >
             <h2 id="filter-title" className="filter-title">
               Find your next favourite piece
             </h2>
@@ -195,7 +212,8 @@ function Shop() {
           ) : (
             <>
               <p className="results-count" aria-live="polite">
-                {results.length} {results.length === 1 ? "piece" : "pieces"} found
+                {results.length} {results.length === 1 ? "piece" : "pieces"}{" "}
+                found
                 {extras.length > 0 && ` · ${extras.join(" · ")}`}
               </p>
 
@@ -206,7 +224,11 @@ function Shop() {
                   <i className="fa fa-search" aria-hidden="true"></i>
                   <p>No pieces match those filters yet.</p>
                   <p>New stock arrives often, or ask us on WhatsApp.</p>
-                  <button type="button" className="clear-btn" onClick={handleReset}>
+                  <button
+                    type="button"
+                    className="clear-btn"
+                    onClick={handleReset}
+                  >
                     Clear filters
                   </button>
                 </div>

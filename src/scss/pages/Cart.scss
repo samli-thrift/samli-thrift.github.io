@@ -8,6 +8,7 @@
   @include section-width;
   @include gradient-bg;
   padding: 100px var(--sp) 40px;
+  border-bottom: 1px solid var(--acc);
 
   .container {
     @include df(normal, normal, column, 8px);

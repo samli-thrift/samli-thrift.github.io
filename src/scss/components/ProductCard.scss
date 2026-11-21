@@ -52,7 +52,7 @@
     font-size: .7rem;
     text-transform: uppercase;
 
-    &.sold { background: var(--text); color: #fff; }
+    &.sold { background: var(--bg); color: var(--text); }
   }
 
   // NEW: slot badge. Dark chip + yellow outline so it reads on any photo and in

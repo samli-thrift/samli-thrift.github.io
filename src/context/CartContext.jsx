@@ -1,11 +1,13 @@
 import { createContext, useEffect, useState } from "react";
-import {products} from "../data/products"; // adjust to your products file
+import { useProducts } from "./ProductsContext"; // adjust path if needed
 
 export const CartContext = createContext();
 
 const STORAGE_KEY = "samli-cart";
 
 function CartContextProvider({ children }) {
+  const { products, loading, error } = useProducts();
+
   const [carts, setCarts] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -40,8 +42,11 @@ function CartContextProvider({ children }) {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // Refresh saved items against the live product list (runs once on app load)
+  // Refresh saved items against the live Supabase products
   useEffect(() => {
+    // Don't judge anything until products have really loaded
+    if (loading || error) return;
+
     setCarts((prev) => {
       const next = prev.map((i) => {
         const live = products.find((p) => String(p.id) === String(i.id));
@@ -56,7 +61,7 @@ function CartContextProvider({ children }) {
       });
       return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
     });
-  }, []);
+  }, [products, loading, error]);
 
   function addToCart(product, qty = 1) {
     setCarts((prev) =>

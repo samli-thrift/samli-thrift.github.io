@@ -59,7 +59,7 @@ export default function Cart() {
         <div className="container">
           {carts.length === 0 ? (
             <div className="cart_empty">
-              <i className="fa-solid fa-bag-shopping" aria-hidden="true" />
+              <i className="fa fa-shopping-bag" aria-hidden="true" />
               <h2>Your cart is empty</h2>
               <p>Browse the shop and add the pieces you like.</p>
               <Link to="/shop" className="btn_link">

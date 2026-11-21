@@ -210,6 +210,7 @@ export function DropdownField({
       <select
         name={name}
         id={name}
+        value={value}
         onChange={(e) => {
           if (!onChange) return;
           if (onChange.length === 2) {
