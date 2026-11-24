@@ -30,6 +30,13 @@
 
   <meta data-rh="true" property="og:title" content="SamLi Thrift | Affordable Quality Thrift Clothing" />
 
+  <!-- Static fallbacks for crawlers that don't run JavaScript (WhatsApp) -->
+  <meta data-rh="true" property="og:url" content="https://samlistores.com.ng/" />
+  <link data-rh="true" rel="canonical" href="https://samlistores.com.ng/" />
+
+  <meta property="og:image:secure_url" content="https://samlistores.com.ng/og-image.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+
   <meta data-rh="true" property="og:description"
     content="Discover quality thrift clothing that fits your style and budget. Shop conveniently on WhatsApp with nationwide delivery across Nigeria." />
 
@@ -69,18 +76,18 @@
   "paymentAccepted": "Cash, Bank Transfer"
 }
 </script>
-<script>
-  (function (l) {
-    if (l.search[1] === '/') {
-      var decoded = l.search.slice(1).split('&').map(function (s) {
-        return s.replace(/~and~/g, '&');
-      }).join('?');
-      window.history.replaceState(null, null,
-        l.pathname.slice(0, -1) + decoded + l.hash
-      );
-    }
-  }(window.location));
-</script>
+  <script>
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location));
+  </script>
 </head>
 
 <body>
